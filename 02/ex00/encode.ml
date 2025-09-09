@@ -1,4 +1,4 @@
-let encode lst =
+(* let encode lst =
 	let rec countOccurrence current count acc = function
 	| [] -> 
 		if count > 0 then acc @ [(count, current)]
@@ -9,10 +9,24 @@ let encode lst =
 	in
 	match lst with
 	| [] -> []
-	| x::xs -> countOccurrence x 1 [] xs
+	| x::xs -> countOccurrence x 1 [] xs *)
+
+let encode lst =
+	let rec count_occurrence current count acc = function
+		| [] ->
+				if count > 0 then (count, current) :: acc
+				else acc
+		| x :: xs ->
+				if x = current then
+					count_occurrence current (count + 1) acc xs
+				else
+					count_occurrence x 1 ((count, current) :: acc) xs
+	in
+	match lst with
+	| [] -> []
+	| x :: xs -> List.rev (count_occurrence x 1 [] xs)
 
 let () =
-
 	let rec iter_list lst to_string =
 		let print_tuple_values_by_line (count, value) =
 			print_string ("(" ^ string_of_int count ^ ", " ^ to_string value ^ ")")
@@ -22,6 +36,14 @@ let () =
 		| x::xs -> print_tuple_values_by_line x; iter_list xs to_string
 	in
 
+	let print_list lst to_string =
+		let rec print_elements = function
+			| [] -> ()
+			| [x] -> print_string (to_string x ^ "\n")
+			| x::xs -> print_string (to_string x ^ "; "); print_elements xs
+		in
+		print_elements lst
+	in
 
 
 	let rec iter_empty_list lst =
@@ -48,17 +70,19 @@ let () =
 	let encodedIntLst = encode myIntLst in
 	let resultChar = print_on_line_for_all encodedCharLst "" (String.make 1) in
 	let resultInt = print_on_line_for_all encodedIntLst "" string_of_int in
-
+	
+	print_list myCharLst (String.make 1);
 	print_string ("Encoded list = [");
 	iter_list encodedCharLst (String.make 1);
 	print_endline ("]");
-	print_endline ("Le resultat est : " ^ resultChar);
+	print_endline ("Le resultat est : " ^ resultChar ^ "\n");
 
 
+	print_list myIntLst string_of_int;
 	print_string ("Encoded list = [");
 	iter_list encodedIntLst string_of_int;
 	print_endline ("]");
-	print_endline ("Le resultat est : " ^ resultInt);
+	print_endline ("Le resultat est : " ^ resultInt ^ "\n");
 
 	print_string ("Encoded list = [");
 	iter_list (encode [42]) string_of_int;
