@@ -14,17 +14,17 @@
 let encode lst =
 	let rec count_occurrence current count acc = function
 		| [] ->
-				if count > 0 then (count, current) :: acc
+				if count > 0 then acc @ [(count, current)]
 				else acc
 		| x :: xs ->
 				if x = current then
 					count_occurrence current (count + 1) acc xs
 				else
-					count_occurrence x 1 ((count, current) :: acc) xs
+					count_occurrence x 1 (acc @ [(count, current)]) xs
 	in
 	match lst with
 	| [] -> []
-	| x :: xs -> List.rev (count_occurrence x 1 [] xs)
+	| x :: xs -> count_occurrence x 1 [] xs
 
 let () =
 	let rec iter_list lst to_string =
