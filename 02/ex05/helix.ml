@@ -27,7 +27,7 @@ let create_nucleotide base =
 	}
 
 (* Function to generate a random helix of size n *)
-let generate_helix n =
+(* let generate_helix n =
 	Random.self_init ();
 	let rec generate_list size acc =
 		if size <= 0 then acc
@@ -42,22 +42,41 @@ let generate_helix n =
 			let nucleotide = create_nucleotide random_base in
 			generate_list (size - 1) (acc @ [nucleotide])
 	in
+	generate_list n [] *)
+
+let generate_helix n =
+	Random.self_init ();
+	let rec generate_list size acc =
+		if size <= 0 then List.rev acc
+		(* if size <= 0 then acc *)
+		else
+			let random_index = Random.int 4 in
+			let random_base = match random_index with
+				| 0 -> A
+				| 1 -> T
+				| 2 -> C
+				| _ -> G
+			in
+			let nucleotide = create_nucleotide random_base in
+			(* generate_list (size - 1) (acc @ [nucleotide]) *)
+			generate_list (size - 1) (nucleotide :: acc)
+	in
 	generate_list n []
 
 (* Function to convert helix to string *)
 let helix_to_string helix =
 	let nucleobase_to_char = function
-		| A -> 'A'
-		| T -> 'T'
-		| C -> 'C'
-		| G -> 'G'
-		| None -> 'X'
+		| A -> "A"
+		| T -> "T"
+		| C -> "C"
+		| G -> "G"
+		| None -> "X"
 	in
 	let rec build_string = function
 		| [] -> ""
 		| nucleotide :: rest ->
 			let char = nucleobase_to_char nucleotide.nucleobase in
-			String.make 1 char ^ build_string rest
+			char ^ build_string rest
 	in
 	build_string helix
 

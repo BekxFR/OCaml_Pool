@@ -72,8 +72,8 @@ let string_of_protein protein =
 let generate_bases_triplets rna =
 	let rec make_triplets acc = function
 		| [] -> acc
-		| [_] -> acc  (* Ignore incomplete triplet *)
-		| [_; _] -> acc  (* Ignore incomplete triplet *)
+		| [_] -> acc
+		| [_; _] -> acc
 		| b1 :: b2 :: b3 :: rest ->
 			make_triplets (acc @ [(b1, b2, b3)]) rest
 	in
@@ -134,7 +134,7 @@ let decode_arn rna =
 		| [] -> acc
 		| triplet :: rest ->
 			let aa = triplet_to_aminoacid triplet in
-			if aa = Stop then acc  (* Stop translation *)
+			if aa = Stop then acc
 			else translate (acc @ [aa]) rest
 	in
 	translate [] triplets

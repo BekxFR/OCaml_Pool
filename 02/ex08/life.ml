@@ -21,8 +21,9 @@ type rna = nucleobase list
 
 type aminoacid =
 	| Stop
-	| Ala | Arg | Asn | Asp | Cys | Gln | Glu | Gly | His | Ile 
-	| Leu | Lys | Met | Phe | Pro | Ser | Thr | Trp | Tyr | Val
+	| Ala | Arg | Asn | Asp | Cys | Gln | Glu
+	| Gly | His | Ile | Leu | Lys | Met | Phe
+	| Pro | Ser | Thr | Trp | Tyr | Val
 
 type protein = aminoacid list
 
@@ -52,10 +53,11 @@ let nucleobase_to_string = function
 
 let aminoacid_to_string = function
 	| Stop -> "Stop"
-	| Ala -> "Ala" | Arg -> "Arg" | Asn -> "Asn" | Asp -> "Asp" | Cys -> "Cys"
-	| Gln -> "Gln" | Glu -> "Glu" | Gly -> "Gly" | His -> "His" | Ile -> "Ile"
-	| Leu -> "Leu" | Lys -> "Lys" | Met -> "Met" | Phe -> "Phe" | Pro -> "Pro"
-	| Ser -> "Ser" | Thr -> "Thr" | Trp -> "Trp" | Tyr -> "Tyr" | Val -> "Val"
+	| Ala -> "Ala" | Arg -> "Arg" | Asn -> "Asn" | Asp -> "Asp"
+	| Cys -> "Cys" | Gln -> "Gln" | Glu -> "Glu" | Gly -> "Gly"
+	| His -> "His" | Ile -> "Ile" | Leu -> "Leu" | Lys -> "Lys"
+	| Met -> "Met" | Phe -> "Phe" | Pro -> "Pro" | Ser -> "Ser"
+	| Thr -> "Thr" | Trp -> "Trp" | Tyr -> "Tyr" | Val -> "Val"
 
 (* Step 1: String to DNA Helix *)
 let string_to_helix dna_string =
@@ -166,24 +168,24 @@ let display_protein protein =
 
 (* Main function: Complete molecular biology pipeline *)
 let life dna_string =
-	print_endline "=== MOLECULAR BIOLOGY SIMULATION ===";
+	print_endline "=== START MOLECULAR BIOLOGY SIMULATION ===";
 	print_endline "";
 	
 	(* Step 1: Input DNA string *)
-	print_endline ("1. INPUT DNA STRING: \"" ^ dna_string ^ "\"");
+	print_endline ("1- Input DNA string: \"" ^ dna_string ^ "\"");
 	print_endline ("   Length: " ^ string_of_int (String.length dna_string) ^ " nucleotides");
 	print_endline "";
 	
 	(* Step 2: Generate DNA helix *)
 	let dna_helix = string_to_helix dna_string in
-	print_endline "2. DNA HELIX GENERATION:";
+	print_endline "2- DNA Helix Generation:";
 	print_endline ("   DNA Helix: " ^ display_helix dna_helix);
 	print_endline ("   Structure: Phosphate-Deoxyribose-Nucleobase chain");
 	print_endline "";
 	
 	(* Step 3: Transcription DNA -> RNA *)
 	let rna_sequence = dna_to_rna dna_helix in
-	print_endline "3. TRANSCRIPTION (DNA -> RNA):";
+	print_endline "3- Transcription (DNA -> RNA):";
 	print_endline ("   DNA Template: " ^ display_helix dna_helix);
 	print_endline ("   RNA Transcript: " ^ display_rna rna_sequence);
 	print_endline ("   Rules: A->U, T->A, C->G, G->C");
@@ -191,7 +193,7 @@ let life dna_string =
 	
 	(* Step 4: Generate triplets *)
 	let triplets = generate_bases_triplets rna_sequence in
-	print_endline "4. CODON FORMATION (Triplets):";
+	print_endline "4- Codons formation (Triplets):";
 	print_endline ("   RNA Sequence: " ^ display_rna rna_sequence);
 	print_endline ("   Codons: " ^ display_triplets triplets);
 	if (List.length rna_sequence) mod 3 <> 0 then
@@ -200,7 +202,7 @@ let life dna_string =
 	
 	(* Step 5: Translation RNA -> Protein *)
 	let protein = decode_arn rna_sequence in
-	print_endline "5. TRANSLATION (RNA -> Protein):";
+	print_endline "5- Translation (RNA -> Protein):";
 	print_endline ("   Codons: " ^ display_triplets triplets);
 	print_endline ("   Protein: " ^ display_protein protein);
 	if List.length protein = 0 then
@@ -209,7 +211,7 @@ let life dna_string =
 		print_endline ("   Result: " ^ string_of_int (List.length protein) ^ " amino acid(s) synthesized");
 	print_endline "";
 	
-	print_endline "=== SIMULATION COMPLETE ===";
+	print_endline "================== END! ==================";
 	protein
 
 let () =
