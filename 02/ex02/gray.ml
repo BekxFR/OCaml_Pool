@@ -40,4 +40,4 @@ let () =
   print_endline "Gray 4 :";
   gray 4;
   print_endline "Gray 5 :";
-  gray 5;
+  gray 5

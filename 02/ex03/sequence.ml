@@ -33,7 +33,7 @@ let sequence n =
 			else
 				generate_sequence (current_n + 1) (look_and_say current_value)
 		in
-		generate_sequence 1 "1";;
+		generate_sequence 1 "1"
 
 let () =
 	let test_values = [1; 2; 3; 4; 5; 6; 7; 8; 0; -1] in
@@ -48,4 +48,4 @@ let () =
 			test_sequence xs
 	in
 	print_endline "Testing sequence function:";
-	test_sequence test_values;;
+	test_sequence test_values

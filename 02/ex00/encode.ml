@@ -45,7 +45,6 @@ let () =
 		print_elements lst
 	in
 
-
 	let rec iter_empty_list lst =
 		let print_tuple (count, value) =
 			print_endline (string_of_int count ^ ", " ^ string_of_int value)

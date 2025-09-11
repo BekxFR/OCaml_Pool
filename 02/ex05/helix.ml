@@ -29,7 +29,6 @@ let create_nucleotide base =
 (* Function to generate a random helix of size n *)
 let generate_helix n =
 	Random.self_init ();
-	let bases = [A; T; C; G] in
 	let rec generate_list size acc =
 		if size <= 0 then acc
 		else
