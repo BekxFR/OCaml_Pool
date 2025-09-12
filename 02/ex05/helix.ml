@@ -27,9 +27,10 @@ let create_nucleotide base =
 	}
 
 (* Function to generate a random helix of size n *)
-(* let generate_helix n =
+let generate_helix n =
 	Random.self_init ();
 	let rec generate_list size acc =
+		(* if size <= 0 then List.rev acc *)
 		if size <= 0 then acc
 		else
 			let random_index = Random.int 4 in
@@ -41,25 +42,7 @@ let create_nucleotide base =
 			in
 			let nucleotide = create_nucleotide random_base in
 			generate_list (size - 1) (acc @ [nucleotide])
-	in
-	generate_list n [] *)
-
-let generate_helix n =
-	Random.self_init ();
-	let rec generate_list size acc =
-		if size <= 0 then List.rev acc
-		(* if size <= 0 then acc *)
-		else
-			let random_index = Random.int 4 in
-			let random_base = match random_index with
-				| 0 -> A
-				| 1 -> T
-				| 2 -> C
-				| _ -> G
-			in
-			let nucleotide = create_nucleotide random_base in
-			(* generate_list (size - 1) (acc @ [nucleotide]) *)
-			generate_list (size - 1) (nucleotide :: acc)
+			(* generate_list (size - 1) (nucleotide :: acc) *)
 	in
 	generate_list n []
 

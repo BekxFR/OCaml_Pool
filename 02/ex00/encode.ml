@@ -1,16 +1,3 @@
-(* let encode lst =
-	let rec countOccurrence current count acc = function
-	| [] -> 
-		if count > 0 then acc @ [(count, current)]
-		else acc
-	| x::xs ->
-		if x = current then countOccurrence current (count + 1) acc xs
-		else countOccurrence x 1 (acc @ [(count, current)]) xs
-	in
-	match lst with
-	| [] -> []
-	| x::xs -> countOccurrence x 1 [] xs *)
-
 let encode lst =
 	let rec count_occurrence current count acc = function
 		| [] ->

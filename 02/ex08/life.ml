@@ -172,50 +172,49 @@ let life dna_string =
 	print_endline "";
 	
 	(* Step 1: Input DNA string *)
-	print_endline ("1- Input DNA string: \"" ^ dna_string ^ "\"");
-	print_endline ("   Length: " ^ string_of_int (String.length dna_string) ^ " nucleotides");
+	print_endline ("1- DNA string: \"" ^ dna_string ^ "\"");
+	print_endline ("Length: " ^ string_of_int (String.length dna_string) ^ " nucleotides");
 	print_endline "";
 	
 	(* Step 2: Generate DNA helix *)
 	let dna_helix = string_to_helix dna_string in
 	print_endline "2- DNA Helix Generation:";
-	print_endline ("   DNA Helix: " ^ display_helix dna_helix);
-	print_endline ("   Structure: Phosphate-Deoxyribose-Nucleobase chain");
+	print_endline ("DNA Helix: " ^ display_helix dna_helix);
+	print_endline ("Structure: Phosphate-Deoxyribose-Nucleobase chain");
 	print_endline "";
 	
 	(* Step 3: Transcription DNA -> RNA *)
 	let rna_sequence = dna_to_rna dna_helix in
 	print_endline "3- Transcription (DNA -> RNA):";
-	print_endline ("   DNA Template: " ^ display_helix dna_helix);
-	print_endline ("   RNA Transcript: " ^ display_rna rna_sequence);
-	print_endline ("   Rules: A->U, T->A, C->G, G->C");
+	print_endline ("DNA Template: " ^ display_helix dna_helix);
+	print_endline ("RNA Transcript: " ^ display_rna rna_sequence);
+	print_endline ("Rules: A->U, T->A, C->G, G->C");
 	print_endline "";
 	
 	(* Step 4: Generate triplets *)
 	let triplets = generate_bases_triplets rna_sequence in
 	print_endline "4- Codons formation (Triplets):";
-	print_endline ("   RNA Sequence: " ^ display_rna rna_sequence);
-	print_endline ("   Codons: " ^ display_triplets triplets);
+	print_endline ("RNA Sequence: " ^ display_rna rna_sequence);
+	print_endline ("Codons: " ^ display_triplets triplets);
 	if (List.length rna_sequence) mod 3 <> 0 then
-		print_endline ("   Note: " ^ string_of_int ((List.length rna_sequence) mod 3) ^ " incomplete nucleotide(s) ignored");
+		print_endline ("Note: " ^ string_of_int ((List.length rna_sequence) mod 3) ^ " incomplete nucleotide(s) ignored");
 	print_endline "";
 	
 	(* Step 5: Translation RNA -> Protein *)
 	let protein = decode_arn rna_sequence in
 	print_endline "5- Translation (RNA -> Protein):";
-	print_endline ("   Codons: " ^ display_triplets triplets);
-	print_endline ("   Protein: " ^ display_protein protein);
+	print_endline ("Protein: " ^ display_protein protein);
 	if List.length protein = 0 then
-		print_endline "   Result: No protein produced (stop codon encountered immediately or no valid codons)"
+		print_endline "Result: No protein produced (stop codon or no valid codons encountered)"
 	else
-		print_endline ("   Result: " ^ string_of_int (List.length protein) ^ " amino acid(s) synthesized");
+		print_endline ("Result: " ^ string_of_int (List.length protein) ^ " amino acid(s) synthesized");
 	print_endline "";
 	
 	print_endline "================== END! ==================";
 	protein
 
 let () =
-	print_endline "Testing complete molecular biology pipeline:";
+	print_endline "Testing molecular biology pipeline:";
 	print_endline "";
 	
 	(* Test 1: Simple sequence *)
@@ -232,4 +231,8 @@ let () =
 	
 	(* Test 4: Short sequence *)
 	let _ = life "TAA" in
+	print_endline "";
+
+		(* Test 4: Empty sequence *)
+	let _ = life "" in
 	print_endline ""

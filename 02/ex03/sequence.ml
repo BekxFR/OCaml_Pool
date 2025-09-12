@@ -1,10 +1,11 @@
 let sequence n =
 	if n <= 0 then ""
 	else
-		let rec look_and_say s =
+		let rec count_and_build s =
 			let rec count_consecutive current count acc = function
 				| [] ->
-					if count > 0 then acc @ [string_of_int count ^ string_of_int current]
+					if count > 0 then 
+						acc @ [string_of_int count ^ string_of_int current]
 					else acc
 				| x :: xs ->
 					if x = current then
@@ -13,8 +14,17 @@ let sequence n =
 						count_consecutive x 1 (acc @ [string_of_int count ^ string_of_int current]) xs
 			in
 			let string_to_int_list str =
+				let string_length s =
+					let rec count_chars i =
+						try
+							ignore (s.[i]);
+							1 + count_chars (i + 1)
+						with Invalid_argument _ -> 0
+					in
+					count_chars 0
+				in
 				let rec aux i acc =
-					if i >= String.length str then acc
+					if i >= string_length str then acc
 					else
 						let digit = int_of_char str.[i] - int_of_char '0' in
 						aux (i + 1) (acc @ [digit])
@@ -22,16 +32,23 @@ let sequence n =
 				aux 0 []
 			in
 			let int_list = string_to_int_list s in
+			let concat_lst_to_string lst =
+				let rec aux acc = function
+					| [] -> acc
+					| x :: xs -> aux (acc ^ x) xs
+				in
+				aux "" lst
+			in
 			match int_list with
 			| [] -> ""
 			| x :: xs ->
 				let result_list = count_consecutive x 1 [] xs in
-				String.concat "" result_list
+				concat_lst_to_string result_list
 		in
 		let rec generate_sequence current_n current_value =
 			if current_n = n then current_value
 			else
-				generate_sequence (current_n + 1) (look_and_say current_value)
+				generate_sequence (current_n + 1) (count_and_build current_value)
 		in
 		generate_sequence 1 "1"
 

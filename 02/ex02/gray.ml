@@ -1,26 +1,27 @@
 let gray n =
-  let pow2 k =
+  let power2 k =
     let rec aux acc k =
       if k = 0 then acc
-      else aux (acc * 2) (k - 1) in
+      else aux (acc * 2) (k - 1)
+    in
     aux 1 k
   in
-  let size = pow2 n in
+  let size = power2 n in
   let rec print_gray i =
     if i = size then print_newline ()
     else
-      let g = i lxor (i lsr 1) in
+      let ngray = i lxor (i lsr 1) in
       let rec build_str j acc =
         if j < 0 then acc
         else
           let bit =
-            if (g lsr j) land 1 = 0 then "0"
+            if (ngray lsr j) land 1 = 0 then "0"
             else "1"
           in
           build_str (j - 1) (acc ^ bit)
       in
-      let s = build_str (n - 1) "" in
-      print_string s;
+      let sgray = build_str (n - 1) "" in
+      print_string sgray;
       if i <> size - 1 then print_string " ";
       print_gray (i + 1)
   in

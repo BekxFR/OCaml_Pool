@@ -4,7 +4,11 @@ let rec crossover lst1 lst2 =
 	| (_, []) | ([], _) -> []
 	| x :: xs, _ ->
 		let rest = crossover xs lst2 in
-		if (List.mem x lst2) then x :: rest
+		let rec checked x = function
+			| [] -> false
+			| y :: ys -> if x = y then true else checked x ys
+		in
+		if checked x lst2 then x :: rest
 		else rest
 
 let () =

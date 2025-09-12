@@ -210,9 +210,9 @@ let () =
 	print_endline ("Decoded protein: " ^ string_of_protein incomplete_protein);
 	print_endline "";
 	
-	(* Test with various amino acids *)
-	let complex_rna = [G; C; A; C; G; A; A; A; C; U; G; G; U; A; A] in  (* GCA CGA AAC UGG UAA *)
-	print_string "Complex RNA: ";
+	(* Test with multiple amino acids and stop codon *)
+	let complex_rna = [G; C; A; C; G; A; A; A; C; U; G; G; U; A; A; G; C; C] in  (* GCA CGA AAC UGG UAA GCC *)
+	print_string "Complex RNA sequence: ";
 	print_rna complex_rna;
 	
 	let complex_triplets = generate_bases_triplets complex_rna in
@@ -221,7 +221,21 @@ let () =
 	
 	let complex_protein = decode_arn complex_rna in
 	print_endline ("Decoded protein: " ^ string_of_protein complex_protein);
-	print_endline "Expected: Ala-Arg-Asn-Trp (stops at UAA)";
+	print_endline "Expected: Ala-Arg-Asn-Trp (translation stops at UAA, ignores remaining GCC)";
+	print_endline "";
+	
+	(* Test with all stop codons *)
+	print_endline "Testing different stop codons:";
+	let stop_test1 = [A; U; G; U; A; A] in  (* AUG UAA *)
+	let stop_test2 = [A; U; G; U; A; G] in  (* AUG UAG *)
+	let stop_test3 = [A; U; G; U; G; A] in  (* AUG UGA *)
+	
+	print_string "Stop test 1 (UAA): ";
+	print_endline (string_of_protein (decode_arn stop_test1));
+	print_string "Stop test 2 (UAG): ";
+	print_endline (string_of_protein (decode_arn stop_test2));
+	print_string "Stop test 3 (UGA): ";
+	print_endline (string_of_protein (decode_arn stop_test3));
 	print_endline "";
 	
 	(* Test empty RNA *)
