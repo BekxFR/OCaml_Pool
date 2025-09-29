@@ -50,7 +50,6 @@ let toStringVerbose = function
   | Queen -> "Queen"
   | King -> "King"
   | As -> "Ace"
-  | _ -> "Invalid"
 
 (** val next : t -> t # Returns the next value, or calls invalid_arg if argument is As *)
 let next = function
