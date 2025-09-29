@@ -4,15 +4,10 @@
 # Check if the script is being run from the correct directory where you want to create the ex{00..N} folders and files.
 
 strings=(
-    encode.ml
-    crossover.ml
-	gray.ml
-	sequence.ml
-	nucleotides.ml
-	helix.ml
-	rna.ml
-	ribosome.ml
-	life.ml
+    Color.ml
+    Value.ml
+	Card.ml
+	Deck.ml
 )
 index=0
 
@@ -24,6 +19,10 @@ for i in "${strings[@]}"; do
 	fi
 	mkdir -p "ex0$index"
 	touch "ex0$index/$i"
+	touch "ex0$index/main.ml"
+	if [ "$i" == "Deck.ml" ]; then
+		touch "ex0$index/Deck.mli"
+	fi
 	echo "File ex0$index/$i created."
 	((index++))
 
