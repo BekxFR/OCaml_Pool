@@ -3,7 +3,7 @@
 OCAML = ocamlopt
 
 all:
-	$(OCAML) *.ml
+	$(OCAML) unix.cmxa *.ml
 
 clean:
 	rm -f *.cmi

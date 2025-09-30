@@ -1,6 +1,3 @@
-(* main.ml - Tests pour le module Deck *)
-
-(* Initialiser le générateur de nombres aléatoires *)
 let () = Random.self_init ()
 
 let test_deck_creation () =
@@ -14,29 +11,27 @@ let test_deck_creation () =
   Printf.printf "Taille du deck 1: %d cartes\n" (List.length list1);
   Printf.printf "Taille du deck 2: %d cartes\n" (List.length list2);
   
-  (* Vérifier que les decks sont différents (ordre aléatoire) *)
   let different = list1 <> list2 in
   Printf.printf "Les deux decks ont un ordre différent: %b\n" different;
   
-  (* Afficher les 5 premières cartes de chaque deck *)
   let rec take n = function
     | [] -> []
     | h :: t -> if n <= 0 then [] else h :: (take (n-1) t) in
   
-  Printf.printf "5 premières cartes du deck 1: %s\n" 
-    (String.concat ", " (take 5 list1));
-  Printf.printf "5 premières cartes du deck 2: %s\n" 
-    (String.concat ", " (take 5 list2));
-  print_endline ""
+  Printf.printf "5 premières cartes du deck 1: ";
+  List.iter (function card -> Printf.printf "%s " card) (take 5 list1);
+  print_newline ();
+  Printf.printf "5 premières cartes du deck 2: ";
+  List.iter (function card -> Printf.printf "%s " card) (take 5 list2);
+  print_newline ()
 
 let test_string_conversions () =
-  print_endline "=== Test des conversions en chaînes ===";
+  print_endline "\n=== Test des conversions en chaînes ===";
   let deck = Deck.newDeck () in
   
   let string_list = Deck.toStringList deck in
   let verbose_list = Deck.toStringListVerbose deck in
   
-  (* Afficher les 3 premières cartes sous les deux formats *)
   let rec take n = function
     | [] -> []
     | h :: t -> if n <= 0 then [] else h :: (take (n-1) t) in
@@ -44,15 +39,17 @@ let test_string_conversions () =
   let first3_normal = take 3 string_list in
   let first3_verbose = take 3 verbose_list in
   
-  Printf.printf "Format normal: %s\n" (String.concat ", " first3_normal);
-  Printf.printf "Format verbose: %s\n" (String.concat ", " first3_verbose);
-  print_endline ""
+  Printf.printf "Format normal: ";
+   List.iter (function card -> Printf.printf "%s " card) first3_normal;
+  print_newline ();
+  Printf.printf "Format verbose: ";
+  List.iter (function card -> Printf.printf "%s " card) first3_verbose;
+  print_newline ()
 
 let test_draw_card () =
-  print_endline "=== Test de tirage de cartes ===";
+  print_endline "\n=== Test de tirage de cartes ===";
   let deck = Deck.newDeck () in
   
-  (* Tirer plusieurs cartes *)
   let (card1, deck1) = Deck.drawCard deck in
   let (card2, deck2) = Deck.drawCard deck1 in
   let (card3, deck3) = Deck.drawCard deck2 in
@@ -69,16 +66,14 @@ let test_draw_card () =
 
 let test_empty_deck () =
   print_endline "=== Test de deck vide (simulation) ===";
-  (* On va épuiser un deck pour tester le cas vide *)
   let deck = Deck.newDeck () in
   
-  (* Fonction pour épuiser complètement un deck *)
-  let rec exhaust_deck d =
+  let rec exhaust_deck deck =
     try
-      let (_, remaining) = Deck.drawCard d in
+      let (_, remaining) = Deck.drawCard deck in
       exhaust_deck remaining
     with
-    | Failure _ -> d (* Deck épuisé *)
+    | Failure _ -> deck
   in
   
   let empty_deck = exhaust_deck deck in
@@ -93,44 +88,31 @@ let test_empty_deck () =
 let test_card_modules () =
   print_endline "=== Test des modules Card intégrés ===";
   
-  (* Test du module Color *)
   Printf.printf "Couleurs disponibles: %s\n"
     (String.concat ", " (List.map Deck.Card.Color.toString Deck.Card.Color.all));
-  
-  (* Test du module Value *)
   Printf.printf "Valeurs disponibles: %s\n"
     (String.concat ", " (List.map Deck.Card.Value.toString Deck.Card.Value.all));
   
-  (* Test de création de carte *)
-  let card = Deck.Card.newCard Deck.Card.Value.As Deck.Card.Color.Spade in
+  let card = Deck.Card.newCard Deck.Card.Value.King Deck.Card.Color.Spade in
   Printf.printf "Carte créée: %s\n" (Deck.Card.toString card);
   Printf.printf "Carte créée (verbose): %s\n" (Deck.Card.toStringVerbose card);
   
-  (* Test des fonctions de test de couleur *)
+  Printf.printf "La carte est un carrot: %b\n" (Deck.Card.isDiamond card);
   Printf.printf "La carte est un pique: %b\n" (Deck.Card.isSpade card);
-  Printf.printf "La carte est un coeur: %b\n" (Deck.Card.isHeart card);
   print_endline ""
 
 let test_deck_exhaustion () =
   print_endline "=== Test d'épuisement complet du deck ===";
   let deck = Deck.newDeck () in
   
-  (* Fonction récursive pour tirer toutes les cartes *)
   let rec draw_all_cards deck count =
     try
       let (card, remaining_deck) = Deck.drawCard deck in
       Printf.printf "Carte %d: %s\n" count (Deck.Card.toString card);
-      if count <= 5 || count > 47 then (* Afficher seulement les premières et dernières *)
-        ()
-      else if count = 6 then
-        print_endline "... (cartes 7 à 47) ..."
-      else
-        ();
       draw_all_cards remaining_deck (count + 1)
     with
     | Failure _ -> Printf.printf "Deck épuisé après %d cartes\n" (count - 1)
   in
-  
   draw_all_cards deck 1;
   print_endline ""
 

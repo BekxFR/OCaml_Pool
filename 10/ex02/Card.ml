@@ -2,17 +2,14 @@ module Color =
 struct
   type t = Spade | Heart | Diamond | Club
 
-  (** val all : t list # The list of all values of type t *)
   let all = [Spade; Heart; Diamond; Club]
 
-  (** val toString : t -> string # "S", "H", "D" or "C" *)
   let toString = function
     | Spade -> "S"
     | Heart -> "H"
     | Diamond -> "D"
     | Club -> "C"
 
-  (** val toStringVerbose : t -> string # "Spade", "Heart", etc *)
   let toStringVerbose = function
     | Spade -> "Spade"
     | Heart -> "Heart"
@@ -24,10 +21,8 @@ module Value =
 struct
   type t = T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | Jack | Queen | King | As
 
-  (** val all : t list # The list of all values of type t *)
   let all = [T2; T3; T4; T5; T6; T7; T8; T9; T10; Jack; Queen; King; As]
 
-  (** val toInt : t -> int # Interger representation of a card value, from 1 for T2 to 13 for As *)
   let toInt = function
     | T2 -> 1
     | T3 -> 2
@@ -43,7 +38,6 @@ struct
     | King -> 12
     | As -> 13
 
-  (** val toString : t -> string #returns "2", ..., "10", "J", "Q", "K" or "A" *)
   let toString = function
     | T2 -> "2"
     | T3 -> "3"
@@ -59,7 +53,6 @@ struct
     | King -> "K"
     | As -> "A"
 
-  (** val toStringVerbose : t -> string # returns "2", ..., "10", "Jack", "Queen", "King" or "As" *)
   let toStringVerbose = function
     | T2 -> "2"
     | T3 -> "3"
@@ -75,7 +68,6 @@ struct
     | King -> "King"
     | As -> "Ace"
 
-  (** val next : t -> t # Returns the next value, or calls invalid_arg if argument is As *)
   let next = function
     | T2 -> T3
     | T3 -> T4
@@ -91,7 +83,6 @@ struct
     | King -> As
     | As -> invalid_arg "No valid card after As"
 
-  (** val previous : t -> t # Returns the previous value, or calls invalid_arg if argument is T2 *)
   let previous = function
     | T2 -> invalid_arg "No valid card before 2"
     | T3 -> T2
