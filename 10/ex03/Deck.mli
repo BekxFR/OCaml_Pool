@@ -1,6 +1,3 @@
-(* Deck.mli - Interface du module Deck *)
-
-(* Module Card intégré depuis l'exercice précédent *)
 module Card : sig
   module Color : sig
     type t = Spade | Heart | Diamond | Club
@@ -41,16 +38,13 @@ module Card : sig
   val isClub : t -> bool
 end
 
-(* Type abstrait représentant un deck de cartes *)
+(* Type abstrait de type t représentant un deck *)
 type t
 
-(* Crée un nouveau deck de 52 cartes dans un ordre aléatoire *)
+(* Crée un nouveau deck de 52 cartes random *)
 val newDeck : unit -> t
 
-(* Convertit un deck en liste de chaînes de caractères *)
 val toStringList : t -> string list
-
-(* Convertit un deck en liste de chaînes de caractères verboses *)
 val toStringListVerbose : t -> string list
 
 (* Tire la première carte du deck et retourne (carte, deck_restant) *)

@@ -68,8 +68,20 @@ let test_draw_card () =
   print_endline ""
 
 let test_empty_deck () =
-  print_endline "=== Test de deck vide ===";
-  let empty_deck = [] in (* Deck vide *)
+  print_endline "=== Test de deck vide (simulation) ===";
+  (* On va épuiser un deck pour tester le cas vide *)
+  let deck = Deck.newDeck () in
+  
+  (* Fonction pour épuiser complètement un deck *)
+  let rec exhaust_deck d =
+    try
+      let (_, remaining) = Deck.drawCard d in
+      exhaust_deck remaining
+    with
+    | Failure _ -> d (* Deck épuisé *)
+  in
+  
+  let empty_deck = exhaust_deck deck in
   
   (try
     let _ = Deck.drawCard empty_deck in
@@ -96,7 +108,7 @@ let test_card_modules () =
   
   (* Test des fonctions de test de couleur *)
   Printf.printf "La carte est un pique: %b\n" (Deck.Card.isSpade card);
-  Printf.printf "La carte est un cœur: %b\n" (Deck.Card.isHeart card);
+  Printf.printf "La carte est un coeur: %b\n" (Deck.Card.isHeart card);
   print_endline ""
 
 let test_deck_exhaustion () =

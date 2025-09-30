@@ -1,6 +1,3 @@
-(* Deck.ml - Implémentation du module Deck *)
-
-(* Module Card intégré depuis l'exercice précédent *)
 module Card = struct
   module Color = struct
     type t = Spade | Heart | Diamond | Club
@@ -125,7 +122,7 @@ module Card = struct
     let val2 = Value.toInt v2 in
     if val1 < val2 then -1
     else if val1 > val2 then 1
-    else (* val1 = val2, compare colors *)
+    else
       if c1 = c2 then 0
       else match (c1, c2) with
         | (Color.Spade, _) -> -1
@@ -134,7 +131,7 @@ module Card = struct
         | (_, Color.Heart) -> 1
         | (Color.Diamond, Color.Club) -> -1
         | (Color.Club, Color.Diamond) -> 1
-        | _ -> 0 (* should not happen *)
+        | _ -> 0
 
   let max c1 c2 =
     if compare c1 c2 >= 0 then c1 else c2
@@ -153,31 +150,39 @@ module Card = struct
   let isClub card = isOf card Color.Club
 end
 
-(* Type abstrait pour représenter un deck *)
 type t = Card.t list
 
-(* Fonction pour mélanger une liste (algorithme de Fisher-Yates) *)
+(* Mélange de Fisher-Yates, aussi appelé mélange de Knuth *)
 let shuffle lst =
-  let arr = Array.of_list lst in
-  let n = Array.length arr in
-  for i = n - 1 downto 1 do
-    let j = Random.int (i + 1) in
-    let temp = arr.(i) in
-    arr.(i) <- arr.(j);
-    arr.(j) <- temp
-  done;
-  Array.to_list arr
+  let rec shuffle_aux acc remaining =
+    match remaining with
+    | [] -> acc
+    | _ ->
+      let len = List.length remaining in
+      let random_index = Random.int len in
+      let rec split_at index lst acc_before =
+        match lst with
+        | [] -> (List.rev acc_before, [])
+        | h :: t ->
+          if index = 0 then
+            (List.rev acc_before, h :: t)
+          else
+            split_at (index - 1) t (h :: acc_before)
+      in
+      let (before, after) = split_at random_index remaining [] in
+      match after with
+      | [] -> acc
+      | chosen :: rest ->
+        shuffle_aux (chosen :: acc) (before @ rest)
+  in
+  shuffle_aux [] lst
 
-(* Crée un nouveau deck de 52 cartes dans un ordre aléatoire *)
 let newDeck () = shuffle Card.all
 
-(* Convertit un deck en liste de chaînes de caractères *)
 let toStringList deck = List.map Card.toString deck
 
-(* Convertit un deck en liste de chaînes de caractères verboses *)
 let toStringListVerbose deck = List.map Card.toStringVerbose deck
 
-(* Tire la première carte du deck et retourne (carte, deck_restant) *)
 let drawCard = function
   | [] -> raise (Failure "Cannot draw from empty deck")
   | h :: t -> (h, t)
