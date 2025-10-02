@@ -1,0 +1,19 @@
+# Fichier de blagues pour OCaml Jokes Program
+# Format: Une blague par ligne, les lignes commençant par # sont des commentaires
+# Vous pouvez ajouter/supprimer des blagues en éditant ce fichier
+
+Why did the OCaml programmer break up with their partner? Because they couldn't handle the mutable relationship!
+What do you call a function that never returns? A recursive nightmare!
+Why don't functional programmers like loops? Because they prefer to map out their problems!
+How many imperative programmers does it take to change a light bulb? Just one, but they'll modify the bulb in place!
+Why did the Haskell programmer refuse to go to the party? Because they couldn't handle the side effects!
+What's the difference between a Java programmer and an OCaml programmer? One uses objects, the other objects to using objects!
+Why do OCaml programmers make great detectives? Because they're always pattern matching!
+What did the compiler say to the buggy code? "You're not my type!"
+Why don't functional programmers ever get lost? Because they always know their current continuation!
+How do you comfort a sad functional programmer? You curry them!
+Why did the programmer quit their job at the factory? Because they preferred pure functions over industrial ones!
+What's a recursive function's favorite music? Compositions that repeat themselves!
+Why don't OCaml programmers like small talk? They prefer strongly typed conversations!
+What do you call a lazy evaluation that finally computes? A procrastination success story!
+Why did the monad go to therapy? It had too many side effects to bind!

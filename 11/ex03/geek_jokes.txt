@@ -1,0 +1,17 @@
+Un développeur va au supermarché. Sa femme lui dit: "Achète du lait, et s'il y a des œufs, prends-en 6." Il revient avec 6 bouteilles de lait.
+Pourquoi les programmeurs mélangent-ils toujours Noël et Halloween? Parce que Oct 31 = Dec 25!
+Un QA engineer entre dans un bar. Commande 1 bière. Commande 0 bière. Commande -1 bière. Commande 999999999 bières. Commande une lézard. Commande -1/0 bières. Commande "bière". Le premier vrai client entre et le bar s'effondre.
+Comment appelle-t-on un développeur qui ne documente jamais son code? Un archéologue du futur!
+Pourquoi les programmeurs portent-ils des lunettes? Parce qu'ils ne peuvent pas C#!
+Un programmeur est trouvé mort dans sa douche. À côté de lui, une bouteille de shampooing avec l'instruction: "Faire mousser, rincer, répéter."
+Combien de programmeurs faut-il pour changer une ampoule? Aucun, c'est un problème de hardware!
+Le fils d'un programmeur lui demande: "Papa, pourquoi le soleil se lève-t-il à l'est et se couche-t-il à l'ouest?" Le programmeur répond: "Ça marche? Ne touche à rien!"
+Un bug de logiciel entre dans un bar. Le barman dit: "Nous ne servons pas votre espèce ici." Le bug dit: "Je ne suis pas un bug, je suis une fonctionnalité!"
+Pourquoi les développeurs détestent-ils les fêtes? Trop de cookies et pas assez de sessions!
+
+# Bonus spécial OCaml
+En OCaml, pourquoi les fonctions ne mentent jamais? Parce qu'elles sont toujours pure!
+Comment un type algébrique dit-il bonjour? "Some hello" ou "None of your business"!
+Qu'est-ce qui rend un programmeur OCaml heureux? Un pattern matching exhaustif!
+Pourquoi les monades sont-elles déprimées? Parce qu'elles sont toujours bind!
+Comment appelle-t-on un bug dans une fonction récursive OCaml? Une stack overflow story!

@@ -1,0 +1,13 @@
+# Blagues informatiques amusantes
+# Ajoutez vos propres blagues en suivant le format: une blague par ligne
+
+Pourquoi les développeurs OCaml ne boivent jamais de café? Parce qu'ils préfèrent les fonctions pures!
+Comment appelle-t-on un bug qui se reproduit seulement le vendredi? Un week-end de débogage!
+Que dit un programmeur fonctionnel quand il se marie? "Je te prends pour épouse sans effet de bord!"
+Pourquoi les programmeurs OCaml sont-ils de bons cuisiniers? Parce qu'ils savent bien curry leurs plats!
+Qu'est-ce qui est pire qu'un pointeur null? Un pointeur qui pointe vers null!
+Pourquoi les listes en OCaml sont-elles toujours heureuses? Parce qu'elles ont toujours une tête et une queue!
+Comment appelle-t-on un programmeur qui utilise goto? Un archéologue du code!
+Que dit un compilateur à un code mal écrit? "Tu n'es pas mon type!"
+Pourquoi les programmeurs fonctionnels n'aiment pas les ascenseurs? Parce qu'ils préfèrent les fonctions élévées!
+Comment un programmeur OCaml exprime-t-il sa colère? Il lève une exception!

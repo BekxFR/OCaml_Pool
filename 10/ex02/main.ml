@@ -1,5 +1,3 @@
-(* main.ml - Tests pour le module Card *)
-
 let test_color () =
   print_endline "=== Tests du module Color ===";
   Printf.printf "All colors: " ;
