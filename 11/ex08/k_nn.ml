@@ -104,6 +104,7 @@ let find_k_nearest_neighbors training_set test_features k =
 ** Type : neighbor list -> (string * int) list
 ** 
 ** Retourne une liste associative (classe, nombre_de_votes)
+** Version pure sans effet de bord pour maintenir la modularité
 *)
 let count_votes neighbors =
   let rec count_aux acc = function
@@ -120,6 +121,87 @@ let count_votes neighbors =
         count_aux (update_count acc) rest
   in
   count_aux [] neighbors
+
+(*
+** Fonction : count_votes_verbose
+** Description : Version avec affichage détaillé pour le debugging
+** Type : neighbor list -> bool -> (string * int) list
+** 
+** Paramètres :
+** - neighbors : liste des voisins à analyser
+** - verbose : si true, affiche les détails de chaque radar utilisé
+** 
+** Retourne la même liste associative mais avec affichage optionnel
+** Respect du principe DRY en réutilisant count_votes
+*)
+let count_votes_verbose neighbors verbose =
+  if verbose then begin
+    print_endline "=== Détail des radars utilisés pour le vote ===";
+    List.iteri (fun i neighbor ->
+      let (features, class_label) = neighbor.radar in
+      Printf.printf "  Radar %d (dist=%.3f, classe=\"%s\"): [|" 
+        (i + 1) neighbor.distance class_label;
+      Array.iteri (fun j x ->
+        if j > 0 then print_string "; ";
+        Printf.printf "%.3f" x
+      ) features;
+      print_endline "|]"
+    ) neighbors;
+    print_endline "===============================================";
+    print_newline ()
+  end;
+  count_votes neighbors
+
+(*
+** Fonction : analyze_voting_process
+** Description : Analyse complète du processus de vote avec détails
+** Type : neighbor list -> unit
+** 
+** Affiche une analyse détaillée du processus de vote :
+** - Liste des radars participants
+** - Répartition des votes par classe
+** - Statistiques de distance par classe
+*)
+let analyze_voting_process neighbors =
+  print_endline "=== Analyse complète du processus de vote ===";
+  print_newline ();
+  
+  (* Affichage des radars participants *)
+  print_endline "Radars participants au vote :";
+  List.iteri (fun i neighbor ->
+    let (features, class_label) = neighbor.radar in
+    Printf.printf "  %d. Classe: %-8s Distance: %6.3f  Features: [|" 
+      (i + 1) ("\"" ^ class_label ^ "\"") neighbor.distance;
+    Array.iteri (fun j x ->
+      if j > 0 then print_string "; ";
+      Printf.printf "%6.3f" x
+    ) features;
+    print_endline "|]"
+  ) neighbors;
+  print_newline ();
+  
+  (* Calcul et affichage des votes *)
+  let votes = count_votes neighbors in
+  print_endline "Répartition des votes :";
+  List.iter (fun (class_label, count) ->
+    Printf.printf "  Classe %-8s : %d vote(s)\n" ("\"" ^ class_label ^ "\"") count
+  ) votes;
+  print_newline ();
+  
+  (* Statistiques de distance par classe *)
+  print_endline "Statistiques de distance par classe :";
+  List.iter (fun (class_label, _) ->
+    let class_neighbors = List.filter (fun n -> 
+      let (_, label) = n.radar in label = class_label
+    ) neighbors in
+    let distances = List.map (fun n -> n.distance) class_neighbors in
+    let min_dist = List.fold_left min (List.hd distances) distances in
+    let max_dist = List.fold_left max (List.hd distances) distances in
+    let avg_dist = (List.fold_left (+.) 0.0 distances) /. (float_of_int (List.length distances)) in
+    Printf.printf "  Classe %-8s : min=%.3f, max=%.3f, moy=%.3f\n" 
+      ("\"" ^ class_label ^ "\"") min_dist max_dist avg_dist
+  ) votes;
+  print_endline "=============================================="
 
 (*
 ** Fonction : resolve_tie_smart
@@ -179,22 +261,13 @@ let majority_vote neighbors =
     | tied_classes -> resolve_tie_smart tied_classes neighbors  (* Égalité *)
 
 (*
-** Fonction principale : k_nn
-** Description : Algorithme k-NN complet
-** Type : radar list -> int -> radar -> string
-** 
-** Signature conforme à l'énoncé : radar list -> int -> radar -> string
-** 
-** Processus :
-** 1. Extraire les features du radar test
-** 2. Trouver les k plus proches voisins
-** 3. Appliquer le vote majoritaire
-** 4. Retourner la classe prédite
+** Fonction : majority_vote_verbose
+** Description : Version avec affichage détaillé du processus de vote
+** Type : neighbor list -> bool -> string
 *)
-let k_nn training_set k test_radar =
-  let (test_features, _) = test_radar in
-  let k_neighbors = find_k_nearest_neighbors training_set test_features k in
-  majority_vote k_neighbors
+let majority_vote_verbose neighbors verbose =
+  if verbose then analyze_voting_process neighbors;
+  majority_vote neighbors
 
 (*
 ** Fonctions utilitaires pour les tests et l'analyse
@@ -224,6 +297,72 @@ let print_neighbors neighbors =
     print_radar neighbor.radar;
     print_newline ()
   ) neighbors
+
+(*
+** Fonction principale : k_nn
+** Description : Algorithme k-NN complet
+** Type : radar list -> int -> radar -> string
+** 
+** Signature conforme à l'énoncé : radar list -> int -> radar -> string
+** 
+** Processus :
+** 1. Extraire les features du radar test
+** 2. Trouver les k plus proches voisins
+** 3. Appliquer le vote majoritaire
+** 4. Retourner la classe prédite
+*)
+let k_nn training_set k test_radar =
+  let (test_features, _) = test_radar in
+  let k_neighbors = find_k_nearest_neighbors training_set test_features k in
+  majority_vote k_neighbors
+
+(*
+** Fonction : k_nn_debug
+** Description : Version debug avec affichage détaillé du processus complet
+** Type : radar list -> int -> radar -> bool -> string
+** 
+** Paramètres :
+** - training_set : ensemble d'entraînement
+** - k : nombre de voisins à considérer
+** - test_radar : radar à classifier
+** - debug : si true, affiche tous les détails du processus
+** 
+** Affiche :
+** - Radar à classifier
+** - Les k voisins sélectionnés
+** - Le processus de vote détaillé
+** - La décision finale
+*)
+let k_nn_debug training_set k test_radar debug =
+  let (test_features, _) = test_radar in
+  
+  if debug then begin
+    print_endline "=== Classification k-NN avec debug ===";
+    print_newline ();
+    print_string "Radar à classifier : ";
+    print_radar test_radar;
+    print_newline ();
+    Printf.printf "Paramètre k = %d\n" k;
+    print_newline ()
+  end;
+  
+  let k_neighbors = find_k_nearest_neighbors training_set test_features k in
+  
+  if debug then begin
+    Printf.printf "Les %d voisins les plus proches :\n" (List.length k_neighbors);
+    print_neighbors k_neighbors;
+    print_newline ()
+  end;
+  
+  let result = majority_vote_verbose k_neighbors debug in
+  
+  if debug then begin
+    print_newline ();
+    Printf.printf "=== Décision finale : \"%s\" ===\n" result;
+    print_newline ()
+  end;
+  
+  result
 
 (*
 ** Fonction : analyze_k_effect
@@ -563,6 +702,10 @@ let test_with_real_csv_files () =
           Printf.printf "%s:%d " label count
         ) votes;
         Printf.printf ") %s\n" (if predicted = true_class then "✓" else "✗")
+      ) [1; 3; 5; 7];
+      List.iter (fun k ->
+        let result_debug = k_nn_debug training_data k test_radar true in
+        Printf.printf "  k=%d -> \"%s\" (debug)\n" k result_debug
       ) [1; 3; 5; 7]
     ) first_three
   end;
@@ -631,6 +774,52 @@ let comparative_analysis () =
   print_endline "Conclusion : k-NN plus robuste au bruit que 1-NN"
 
 (*
+** Fonction : test_debug_features
+** Description : Démontre les nouvelles fonctionnalités de debug
+*)
+let test_debug_features () =
+  print_endline "=== Test des fonctionnalités de debug ===";
+  print_newline ();
+  
+  let training_set = [
+    ([|1.0; 2.0; 1.5|], "good");
+    ([|1.2; 1.8; 1.6|], "good");
+    ([|0.8; 2.2; 1.4|], "good");
+    ([|-1.0; -2.0; -1.5|], "bad");
+    ([|-1.2; -1.8; -1.6|], "bad");
+    ([|-0.8; -2.2; -1.4|], "bad");
+  ] in
+  
+  let test_radar = ([|1.1; 1.9; 1.4|], "unknown") in
+  
+  print_endline "1. Classification normale (sans debug) :";
+  let result_normal = k_nn training_set 3 test_radar in
+  Printf.printf "Résultat : \"%s\"\n" result_normal;
+  print_newline ();
+  
+  print_endline "2. Classification avec debug complet :";
+  let result_debug = k_nn_debug training_set 3 test_radar true in
+  Printf.printf "Résultat : \"%s\"\n" result_debug;
+  print_newline ();
+  
+  print_endline "3. Test de count_votes_verbose :";
+  let (test_features, _) = test_radar in
+  let neighbors = find_k_nearest_neighbors training_set test_features 3 in
+  print_endline "Mode silencieux :";
+  let votes_silent = count_votes_verbose neighbors false in
+  List.iter (fun (label, count) ->
+    Printf.printf "  %s: %d votes\n" label count
+  ) votes_silent;
+  print_newline ();
+  
+  print_endline "Mode verbose :";
+  let votes_verbose = count_votes_verbose neighbors true in
+  List.iter (fun (label, count) ->
+    Printf.printf "  %s: %d votes\n" label count
+  ) votes_verbose;
+  print_newline ()
+
+(*
 ** Point d'entrée principal
 *)
 let () =
@@ -640,6 +829,7 @@ let () =
   print_endline "╚════════════════════════════════════════════════════════════════╝";
   print_newline ();
   
+  test_debug_features ();
   test_k_nn_basic ();
   test_tie_resolution ();
   test_edge_cases ();
