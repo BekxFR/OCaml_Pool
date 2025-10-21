@@ -12,7 +12,7 @@ let () =
   
   let safe_init_array = Array.init 5 (fun i -> 
     if i < List.length jokes then List.nth jokes i 
-    else "no joke in this index"
+    else "No joke in this index"
   ) in
   
   Printf.printf "Random joke: %s\n" (safe_init_array.(x));

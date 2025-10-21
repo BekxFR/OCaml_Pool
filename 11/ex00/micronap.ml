@@ -7,7 +7,7 @@ let () =
         let my_sleep () = Unix.sleep 1 in
         let sleeping_time = int_of_string Sys.argv.(1) in
         if sleeping_time < 0 then
-          (Printf.eprintf "Please provide a non-negative integer for sleep time.\n";
+          (Printf.eprintf "Only non-negative integer for sleep time.\n";
           exit 1)
         else
           let rec loop n =
@@ -18,5 +18,5 @@ let () =
           in
           loop sleeping_time
       with Failure _ ->
-        Printf.eprintf "Invalid argument. Please provide a valid number.\n";
+        Printf.eprintf "Invalid argument. Only non-negative integer for sleep time.\n";
         exit 1
