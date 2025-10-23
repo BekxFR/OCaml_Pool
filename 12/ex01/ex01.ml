@@ -89,6 +89,7 @@ module StringHashtbl = Hashtbl.Make(StringHashedType)
 ** 
 ** Note : L'ordre d'affichage dépend de la fonction de hachage djb2
 *)
+
 let () =
   let ht = StringHashtbl.create 5 in
   let values = [ "Hello"; "world"; "42"; "Ocaml"; "H" ] in
