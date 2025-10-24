@@ -201,7 +201,7 @@ let analyze_voting_process neighbors =
     Printf.printf "  Classe %-8s : min=%.3f, max=%.3f, moy=%.3f\n" 
       ("\"" ^ class_label ^ "\"") min_dist max_dist avg_dist
   ) votes;
-  print_endline "=============================================="
+  print_endline "============================================="
 
 (*
 ** Fonction : resolve_tie_smart
@@ -824,8 +824,8 @@ let test_debug_features () =
 *)
 let () =
   print_endline "╔════════════════════════════════════════════════════════════════╗";
-  print_endline "║                    k-NN Algorithm Implementation               ║";
-  print_endline "║           Généralisation de l'algorithme 1-NN                  ║";
+  print_endline "║                  k-NN Algorithm Implementation                 ║";
+  print_endline "║               Généralisation de l'algorithme 1-NN              ║";
   print_endline "╚════════════════════════════════════════════════════════════════╝";
   print_newline ();
   
@@ -838,6 +838,6 @@ let () =
   test_with_real_csv_files ();
   
   print_endline "╔════════════════════════════════════════════════════════════════╗";
-  print_endline "║                        Tests terminés                          ║";
-  print_endline "║    k-NN implémenté avec vote majoritaire et gestion d'égalités ║";
+  print_endline "║                         Tests terminés                         ║";
+  print_endline "║   k-NN implémenté avec vote majoritaire et gestion d'égalités  ║";
   print_endline "╚════════════════════════════════════════════════════════════════╝"
