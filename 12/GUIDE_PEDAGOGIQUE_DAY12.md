@@ -582,10 +582,12 @@ let mul x y = (x * y) asr FB.bits
 **Explication détaillée du problème du (2n)** :
 
 Soit deux nombres `a` et `b` en représentation fixe avec `n` bits fractionnaires :
+
 - `a_fixed = a × 2^n`
 - `b_fixed = b × 2^n`
 
 Multiplication naïve :
+
 ```
 a_fixed × b_fixed = (a × 2^n) × (b × 2^n)
                   = a × b × 2^n × 2^n
@@ -594,11 +596,13 @@ a_fixed × b_fixed = (a × 2^n) × (b × 2^n)
 ```
 
 **Le problème** : le résultat est scalé par `2^(2n)` au lieu de `2^n`
+
 - On veut : `(a×b) × 2^n`
 - On a : `(a×b) × 2^(2n)`
 - **Excès** : `2^n`
 
 **La solution** : diviser par `2^n` pour ramener à l'échelle correcte
+
 ```ocaml
 (x * y) asr FB.bits  (* Divise par 2^n *)
 = (a×b) × 2^(2n) / 2^n
@@ -606,6 +610,7 @@ a_fixed × b_fixed = (a × 2^n) × (b × 2^n)
 ```
 
 **Exemple numérique avec Fixed4** (n=4) :
+
 ```
 2.0 × 3.0 = 6.0
 

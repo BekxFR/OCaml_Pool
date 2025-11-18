@@ -38,7 +38,7 @@ end
 ** Signature EVALEXPR - Version finale
 ** Description : Interface exposant les constructeurs d'expressions
 ** 
-** SOLUTION : Exposer explicitement le type expr avec ses constructeurs
+** Exposer explicitement le type expr avec ses constructeurs
 ** dans la signature pour permettre la construction d'expressions
 *)
 module type EVALEXPR =
@@ -52,12 +52,12 @@ sig
 end
 
 (*
-** Signature MAKEEVALEXPR corrigée
+** Signature MAKEEVALEXPR
 ** Description : Signature du functor avec contrainte de partage
 ** 
 ** CONTRAINTE CRUCIALE : 
 ** Le functor doit garantir que le type t du résultat est identique au type t du paramètre
-** Ceci est la 7ème contrainte mentionnée dans l'énoncé
+** 7ème contrainte mentionnée dans l'énoncé
 *)
 module type MAKEEVALEXPR = 
   functor (V : VAL) -> EVALEXPR with type t = V.t

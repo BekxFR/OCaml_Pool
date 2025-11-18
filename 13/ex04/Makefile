@@ -1,25 +1,28 @@
+# Makefile - Day 13 Exercise 04
+# Compilation: ocamlopt
+# Files: people.ml, doctor.ml, dalek.ml, army.ml, galifrey.ml, main.ml
+
 .PHONY: all test clean fclean re
 
 OCAML = ocamlopt
+TARGET = time_war
+SOURCES = people.ml doctor.ml dalek.ml army.ml galifrey.ml main.ml
 
-all:
-	$(OCAML) unix.cmxa *.ml
+all: $(TARGET)
+
+$(TARGET): $(SOURCES)
+	$(OCAML) -o $(TARGET) $(SOURCES)
 
 clean:
-	rm -f *.cmi
-	rm -f *.cmx
-	rm -f *.o
+	rm -f *.cmi *.cmx *.o
 
 fclean: clean
-	rm -f *.cmi
-	rm -f *.cmx
-	rm -f *.o
-	rm -f *.out
+	rm -f $(TARGET)
 
 re: fclean all
 
-test: all
-	./a.out
+test: $(TARGET)
+	./$(TARGET)
 
 interpret:
 	rlwrap ocaml

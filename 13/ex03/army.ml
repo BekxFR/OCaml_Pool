@@ -1,0 +1,58 @@
+(* Class army - Day 13 Exercise 03
+ * Classe paramétrée avec type 'a
+ * Respect des règles:
+ * - Style fonctionnel
+ * - Pas de open, for, while
+ * - Stdlib et List modules autorisés
+ *)
+
+class ['a] army =
+object (self)
+  (* Attribut members - liste d'instances de type 'a *)
+  val mutable members : 'a list = []
+  
+  (* Initializer *)
+  initializer
+    print_endline "A new army has been formed!"
+  
+  (* add - ajoute un membre à la liste
+   * Par défaut, j'ajoute en tête (front) car c'est plus efficace en OCaml
+   * Mais je fournis aussi une méthode add_back pour ajouter à la fin *)
+  method add (member : 'a) : unit =
+    members <- member :: members;
+    print_endline "  → New member added to the army (front)"
+  
+  (* add_back - ajoute un membre à la fin de la liste *)
+  method add_back (member : 'a) : unit =
+    members <- List.append members [member];
+    print_endline "  → New member added to the army (back)"
+  
+  (* delete - retire le premier élément de la liste (front)
+   * Retourne unit *)
+  method delete : unit =
+    match members with
+    | [] -> print_endline "  → Army is empty, cannot delete"
+    | _ :: rest -> 
+        members <- rest;
+        print_endline "  → Member removed from the army (front)"
+  
+  (* delete_back - retire le dernier élément de la liste (back) *)
+  method delete_back : unit =
+    match List.rev members with
+    | [] -> print_endline "  → Army is empty, cannot delete"
+    | _ :: rest -> 
+        members <- List.rev rest;
+        print_endline "  → Member removed from the army (back)"
+  
+  (* size - retourne la taille de l'armée *)
+  method size : int =
+    List.length members
+  
+  (* is_empty - vérifie si l'armée est vide *)
+  method is_empty : bool =
+    members = []
+  
+  (* get_members - retourne la liste des membres *)
+  method get_members : 'a list =
+    members
+end

@@ -1,25 +1,23 @@
+# Makefile for Day 13 Ex00
+# Compiler: ocamlopt as required
+
 .PHONY: all test clean fclean re
 
-OCAML = ocamlopt
+OCAMLOPT = ocamlopt
+EXEC = people_test
 
-all:
-	$(OCAML) unix.cmxa *.ml
+all: $(EXEC)
+
+$(EXEC): people.ml main.ml
+	$(OCAMLOPT) -o $(EXEC) people.ml main.ml
 
 clean:
-	rm -f *.cmi
-	rm -f *.cmx
-	rm -f *.o
+	rm -f *.cmi *.cmx *.o
 
 fclean: clean
-	rm -f *.cmi
-	rm -f *.cmx
-	rm -f *.o
-	rm -f *.out
+	rm -f $(EXEC)
 
 re: fclean all
 
 test: all
-	./a.out
-
-interpret:
-	rlwrap ocaml
+	./$(EXEC)

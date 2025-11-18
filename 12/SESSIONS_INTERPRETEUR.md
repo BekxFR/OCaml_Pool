@@ -336,7 +336,7 @@ val stop_internal : int = 4
 (* Donc : foreach va itérer de 0 à 4 (en représentation interne) *)
 
 (* Étape 2 : Mécanisme de la boucle *)
-(* 
+(*
    loop 0:  0 <= 4 ? OUI → affiche, succ(0) = 1
    loop 1:  1 <= 4 ? OUI → affiche, succ(1) = 2
    loop 2:  2 <= 4 ? OUI → affiche, succ(2) = 3
@@ -386,6 +386,92 @@ val stop_internal : int = 4
    Le programme ne "sait" pas à l'avance combien de nombres.
    C'est la condition "current <= stop" qui détermine naturellement
    le nombre d'itérations en fonction des valeurs internes. *)
+```
+
+### Session 4.6 : D'où vient le "step" de 0.0625 ?
+
+```ocaml
+(* Le "step" n'est PAS calculé explicitement dans le code ! *)
+(* C'est une conséquence mathématique de succ *)
+
+(* Rappel : succ incrémente de 1 en représentation interne *)
+# (* let succ x = x + 1 *)
+
+(* Pour Fixed4, scale_factor = 16 *)
+# let scale_factor = 16;;
+val scale_factor : int = 16
+
+(* Démontrons que step = 1/16 *)
+
+(* Prenons une valeur quelconque *)
+# let x_internal = 5;;  (* n'importe quelle valeur *)
+val x_internal : int = 5
+
+# let x_real = (float_of_int x_internal) /. 16.0;;
+val x_real : float = 0.3125  (* 5/16 *)
+
+(* Après succ : x + 1 *)
+# let y_internal = x_internal + 1;;
+val y_internal : int = 6
+
+# let y_real = (float_of_int y_internal) /. 16.0;;
+val y_real : float = 0.375  (* 6/16 *)
+
+(* Le step est la différence *)
+# let step = y_real -. x_real;;
+val step : float = 0.0625
+
+(* Vérifions : 1/16 = 0.0625 *)
+# 1.0 /. 16.0;;
+- : float = 0.0625  ✓
+
+(* DÉMONSTRATION ALGÉBRIQUE *)
+(*
+   x_real = x / scale_factor
+   y_real = (x + 1) / scale_factor
+
+   step = y_real - x_real
+        = (x + 1) / scale_factor - x / scale_factor
+        = [(x + 1) - x] / scale_factor
+        = 1 / scale_factor
+        = 1 / 16
+        = 0.0625
+
+   Le step est TOUJOURS 1/scale_factor, quelle que soit la valeur de x !
+*)
+
+(* Pour Fixed8 *)
+# let scale_factor8 = 256;;
+# let step8 = 1.0 /. (float_of_int scale_factor8);;
+val step8 : float = 0.00390625
+
+(* Formule générale *)
+# let compute_step bits =
+    let scale = float_of_int (1 lsl bits) in
+    1.0 /. scale
+  ;;
+val compute_step : int -> float = <fun>
+
+# compute_step 4;;
+- : float = 0.0625  (* Fixed4 *)
+
+# compute_step 8;;
+- : float = 0.00390625  (* Fixed8 *)
+
+# compute_step 16;;
+- : float = 1.52587890625e-05  (* Fixed16, très précis ! *)
+
+(* CONCLUSION IMPORTANTE :
+   Le "step" n'est jamais calculé ou stocké dans le code.
+   C'est une propriété émergente du système :
+
+   step = 1 / (2^bits)
+
+   Cette valeur découle directement de :
+   1. La définition de succ (x + 1)
+   2. Le facteur d'échelle (2^bits)
+   3. La conversion to_float (x / scale_factor)
+*)
 ```
 
 ### Session 5 : Visualiser l'arithmétique
@@ -502,10 +588,10 @@ val produit_correct : float = 96.
    (a × 2^n) × (b × 2^n) = (a×b) × 2^(2n)
                                     ^^^^^
                                     Problème : on veut 2^n, pas 2^(2n)
-   
+
    Solution : diviser par 2^n
    [(a × 2^n) × (b × 2^n)] / 2^n = (a×b) × 2^n ✓
-   
+
    En code OCaml :
    let mul x y = (x * y) asr FB.bits
                  ^^^^^^^   ^^^^^^^^^^^
@@ -770,7 +856,194 @@ module BoolEvalExpr :
 (* C'est la puissance de l'extensibilité *)
 ```
 
-### Session 6 : Que se passe-t-il sans les contraintes ?
+### Session 6 : Comprendre le fonctionnement de eval
+
+```ocaml
+(* Analysons eval en détail *)
+
+(* Rappel des types *)
+# module type VAL = sig
+    type t
+    val add : t -> t -> t
+    val mul : t -> t -> t
+  end;;
+
+# module IntVal : VAL with type t = int = struct
+    type t = int
+    let add = (+)
+    let mul = ( * )
+  end;;
+
+# module MakeEvalExpr = functor (V : VAL) -> struct
+    type t = V.t
+    type expr =
+      | Value of t
+      | Add of expr * expr
+      | Mul of expr * expr
+
+    let rec eval = function
+      | Value v -> v
+      | Add (e1, e2) -> V.add (eval e1) (eval e2)
+      | Mul (e1, e2) -> V.mul (eval e1) (eval e2)
+  end;;
+
+# module IntEval = MakeEvalExpr(IntVal);;
+
+(* Exemple simple : Value 42 *)
+# let expr1 = IntEval.Value 42;;
+# IntEval.eval expr1;;
+- : IntVal.t = 42
+(* Pattern matching : Value v → retourne v directement *)
+
+(* Exemple avec Add *)
+# let expr2 = IntEval.Add (IntEval.Value 2, IntEval.Value 3);;
+# IntEval.eval expr2;;
+- : IntVal.t = 5
+(*
+   eval (Add (Value 2, Value 3))
+   → V.add (eval (Value 2)) (eval (Value 3))
+   → V.add 2 3
+   → 5
+*)
+
+(* Exemple avec Mul *)
+# let expr3 = IntEval.Mul (IntEval.Value 4, IntEval.Value 5);;
+# IntEval.eval expr3;;
+- : IntVal.t = 20
+(*
+   eval (Mul (Value 4, Value 5))
+   → V.mul (eval (Value 4)) (eval (Value 5))
+   → V.mul 4 5
+   → 20
+*)
+
+(* Exemple imbriqué : (2 + 3) * 5 *)
+# let expr4 = IntEval.Mul (
+    IntEval.Add (IntEval.Value 2, IntEval.Value 3),
+    IntEval.Value 5
+  );;
+# IntEval.eval expr4;;
+- : IntVal.t = 25
+
+(* Trace d'exécution :
+   eval Mul(Add(Value 2, Value 3), Value 5)
+
+   1. Pattern : Mul(e1, e2)
+   2. Calcule : V.mul (eval e1) (eval e2)
+
+   3. eval e1 = eval Add(Value 2, Value 3)
+      3.1. Pattern : Add(e1', e2')
+      3.2. Calcule : V.add (eval e1') (eval e2')
+      3.3. eval e1' = eval Value 2 → 2
+      3.4. eval e2' = eval Value 3 → 3
+      3.5. V.add 2 3 → 5
+
+   4. eval e2 = eval Value 5 → 5
+
+   5. V.mul 5 5 → 25
+*)
+
+(* Expression complexe : ((1 + 2) * 3) + (4 * 5) *)
+# let expr5 = IntEval.Add (
+    IntEval.Mul (
+      IntEval.Add (IntEval.Value 1, IntEval.Value 2),
+      IntEval.Value 3
+    ),
+    IntEval.Mul (IntEval.Value 4, IntEval.Value 5)
+  );;
+# IntEval.eval expr5;;
+- : IntVal.t = 29
+
+(* Calcul manuel :
+   (1 + 2) = 3
+   3 * 3 = 9
+   4 * 5 = 20
+   9 + 20 = 29 ✓
+*)
+
+(* Visualisons l'arbre :
+         Add
+        /    \
+      Mul     Mul
+     /   \   /   \
+   Add   3  4     5
+   / \
+  1   2
+*)
+```
+
+### Session 6.5 : Ordre d'évaluation et récursion
+
+```ocaml
+(* Créons une version instrumentée pour voir l'ordre *)
+
+# module IntValDebug = struct
+    type t = int
+    let add x y =
+      Printf.printf "  add(%d, %d) = %d\n" x y (x + y);
+      x + y
+    let mul x y =
+      Printf.printf "  mul(%d, %d) = %d\n" x y (x * y);
+      x * y
+  end;;
+
+# module MakeEvalExprDebug = functor (V : VAL) -> struct
+    type t = V.t
+    type expr =
+      | Value of t
+      | Add of expr * expr
+      | Mul of expr * expr
+
+    let rec eval expr =
+      match expr with
+      | Value v ->
+          Printf.printf "  eval(Value %d)\n" v;
+          v
+      | Add (e1, e2) ->
+          Printf.printf "  eval(Add(...))\n";
+          let v1 = eval e1 in
+          let v2 = eval e2 in
+          V.add v1 v2
+      | Mul (e1, e2) ->
+          Printf.printf "  eval(Mul(...))\n";
+          let v1 = eval e1 in
+          let v2 = eval e2 in
+          V.mul v1 v2
+  end;;
+
+# module IntEvalDebug = MakeEvalExprDebug(IntValDebug);;
+
+(* Testons : (2 + 3) * 5 *)
+# let expr = IntEvalDebug.Mul (
+    IntEvalDebug.Add (IntEvalDebug.Value 2, IntEvalDebug.Value 3),
+    IntEvalDebug.Value 5
+  );;
+
+# Printf.printf "=== Évaluation de (2 + 3) * 5 ===\n";;
+# IntEvalDebug.eval expr;;
+=== Évaluation de (2 + 3) * 5 ===
+  eval(Mul(...))
+  eval(Add(...))
+  eval(Value 2)
+  eval(Value 3)
+  add(2, 3) = 5
+  eval(Value 5)
+  mul(5, 5) = 25
+- : IntValDebug.t = 25
+
+(* OBSERVATION :
+   1. eval Mul → entre dans le cas Mul
+   2. Évalue e1 (le Add)
+   3. eval Add → entre dans le cas Add
+   4. Évalue e1' (Value 2) → retourne 2
+   5. Évalue e2' (Value 3) → retourne 3
+   6. add(2, 3) → retourne 5
+   7. Évalue e2 (Value 5) → retourne 5
+   8. mul(5, 5) → retourne 25
+*)
+```
+
+### Session 7 : Que se passe-t-il sans les contraintes ?
 
 ```ocaml
 (* Foncteur sans contrainte de partage *)
