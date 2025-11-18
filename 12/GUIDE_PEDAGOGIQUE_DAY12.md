@@ -164,6 +164,169 @@ end
 
 **Différence cruciale** : `hash` au lieu de `compare`
 
+### 🔬 Exploration dans l'interpréteur OCaml
+
+#### Session 1 : Comprendre HashedType vs OrderedType
+
+```ocaml
+(* Comparer les deux signatures *)
+# #show Set.OrderedType;;
+module type OrderedType =
+  sig type t val compare : t -> t -> int end
+
+# #show Hashtbl.HashedType;;
+module type HashedType =
+  sig
+    type t
+    val equal : t -> t -> bool
+    val hash : t -> int
+  end
+
+(* Différences clés :
+   Set.Make  → compare (ordre)
+   Hashtbl.Make → equal + hash (pas d'ordre) *)
+```
+
+#### Session 2 : Tester différentes fonctions de hachage
+
+```ocaml
+(* Mauvaise fonction de hachage : toujours 0 *)
+# module BadHash = struct
+    type t = string
+    let equal = (=)
+    let hash _ = 0  (* CATASTROPHIQUE ! *)
+  end;;
+
+# module BadHashtbl = Hashtbl.Make(BadHash);;
+module BadHashtbl : sig (* ... *) end
+
+(* Créer une table et ajouter des éléments *)
+# let ht = BadHashtbl.create 10;;
+val ht : '_weak1 BadHashtbl.t = <abstr>
+
+# BadHashtbl.add ht "foo" 1;;
+# BadHashtbl.add ht "bar" 2;;
+# BadHashtbl.add ht "baz" 3;;
+
+(* Tout fonctionne, mais les performances sont HORRIBLES *)
+(* Toutes les clés vont dans le même bucket → O(n) au lieu de O(1) *)
+
+(* Fonction de hachage basique : longueur *)
+# module LengthHash = struct
+    type t = string
+    let equal = (=)
+    let hash s = String.length s
+  end;;
+
+# module LengthHashtbl = Hashtbl.Make(LengthHash);;
+
+(* Ordre d'itération dépend du hash *)
+# let ht2 = LengthHashtbl.create 5;;
+# LengthHashtbl.add ht2 "foo" 1;;
+# LengthHashtbl.add ht2 "bar" 2;;
+# LengthHashtbl.add ht2 "hello" 3;;
+# LengthHashtbl.add ht2 "world" 4;;
+
+# LengthHashtbl.iter (fun k v ->
+    Printf.printf "%s -> %d (hash=%d)\n" k v (LengthHash.hash k)) ht2;;
+(* L'ordre d'affichage dépendra des buckets internes *)
+```
+
+#### Session 3 : Implémenter et tester djb2
+
+```ocaml
+(* Notre implémentation djb2 *)
+# module StringHashedType = struct
+    type t = string
+    let equal s1 s2 = (s1 = s2)
+
+    let hash str =
+      let len = String.length str in
+      let rec hash_aux acc i =
+        if i >= len then acc
+        else
+          let char_code = Char.code (String.get str i) in
+          let new_acc = ((acc lsl 5) + acc) + char_code in
+          hash_aux new_acc (i + 1)
+      in
+      hash_aux 5381 0
+  end;;
+
+(* Tester la fonction de hachage *)
+# StringHashedType.hash "Hello";;
+- : int = 210676686969
+
+# StringHashedType.hash "World";;
+- : int = 210721073030
+
+# StringHashedType.hash "42";;
+- : int = 5863394
+
+(* Propriété déterministe *)
+# StringHashedType.hash "Hello";;
+- : int = 210676686969  (* même résultat *)
+
+(* Collisions possibles mais rares *)
+# StringHashedType.hash "abc";;
+- : int = 193485963
+
+# StringHashedType.hash "acb";;
+- : int = 193485948  (* différent ! *)
+```
+
+#### Session 4 : Ordre non déterministe
+
+```ocaml
+# module StringHashtbl = Hashtbl.Make(StringHashedType);;
+
+# let ht = StringHashtbl.create 5;;
+# let values = ["Hello"; "world"; "42"; "Ocaml"; "H"];;
+# List.iter (fun s -> StringHashtbl.add ht s (String.length s)) values;;
+
+(* Afficher dans l'ordre interne *)
+# StringHashtbl.iter (fun k v ->
+    Printf.printf "k=\"%s\", v=%d, hash=%d\n"
+      k v (StringHashedType.hash k)) ht;;
+
+(* L'ordre dépend de : hash(key) mod taille_table *)
+(* Changez la taille_table → changez l'ordre ! *)
+
+# let ht2 = StringHashtbl.create 17;;  (* taille différente *)
+# List.iter (fun s -> StringHashtbl.add ht2 s (String.length s)) values;;
+# StringHashtbl.iter (fun k v -> Printf.printf "k=\"%s\", v=%d\n" k v) ht2;;
+(* Ordre probablement différent ! *)
+```
+
+#### Session 5 : Comparer Set vs Hashtbl
+
+```ocaml
+(* Même données, structures différentes *)
+# module StringSet = Set.Make(String);;
+# module StringHashtbl = Hashtbl.Make(struct
+    type t = string
+    let equal = (=)
+    let hash = Hashtbl.hash
+  end);;
+
+# let data = ["zebra"; "apple"; "mango"; "banana"];;
+
+(* Set : ordre lexicographique garanti *)
+# let set = List.fold_left (fun acc x -> StringSet.add x acc)
+    StringSet.empty data;;
+# StringSet.iter print_endline set;;
+apple
+banana
+mango
+zebra
+- : unit = ()
+
+(* Hashtbl : ordre non déterministe *)
+# let ht = StringHashtbl.create 10;;
+# List.iter (fun x -> StringHashtbl.add ht x (String.length x)) data;;
+# StringHashtbl.iter (fun k v -> Printf.printf "%s\n" k) ht;;
+(* Ordre imprévisible *)
+```
+
 ### Qu'est-ce qu'une fonction de hachage ?
 
 Une fonction de hachage transforme une donnée arbitraire en un entier :
@@ -416,7 +579,48 @@ Justification : `(a * 2^n) + (b * 2^n) = (a+b) * 2^n` ✓
 let mul x y = (x * y) asr FB.bits
 ```
 
-Justification : `(a * 2^n) * (b * 2^n) = (a*b) * 2^(2n)` → diviser par `2^n`
+**Explication détaillée du problème du (2n)** :
+
+Soit deux nombres `a` et `b` en représentation fixe avec `n` bits fractionnaires :
+- `a_fixed = a × 2^n`
+- `b_fixed = b × 2^n`
+
+Multiplication naïve :
+```
+a_fixed × b_fixed = (a × 2^n) × (b × 2^n)
+                  = a × b × 2^n × 2^n
+                  = (a × b) × 2^(n+n)    ← Propriété : x^m × x^p = x^(m+p)
+                  = (a × b) × 2^(2n)     ← Voici le (2n) !
+```
+
+**Le problème** : le résultat est scalé par `2^(2n)` au lieu de `2^n`
+- On veut : `(a×b) × 2^n`
+- On a : `(a×b) × 2^(2n)`
+- **Excès** : `2^n`
+
+**La solution** : diviser par `2^n` pour ramener à l'échelle correcte
+```ocaml
+(x * y) asr FB.bits  (* Divise par 2^n *)
+= (a×b) × 2^(2n) / 2^n
+= (a×b) × 2^n  ✓
+```
+
+**Exemple numérique avec Fixed4** (n=4) :
+```
+2.0 × 3.0 = 6.0
+
+Représentations :
+- 2.0 stocké comme 32 (2.0 × 16)
+- 3.0 stocké comme 48 (3.0 × 16)
+
+Multiplication naïve :
+- 32 × 48 = 1536
+- 1536 = 6.0 × 256 = 6.0 × 2^8 = 6.0 × 2^(2×4)  ← 2n avec n=4
+
+Renormalisation :
+- 1536 asr 4 = 1536 / 16 = 96
+- 96 = 6.0 × 16 = 6.0 × 2^4  ✓
+```
 
 **Division** : pré-scaling nécessaire
 

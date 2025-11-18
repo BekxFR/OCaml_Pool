@@ -255,13 +255,17 @@ let test_all_functions () =
   Printf.printf "%s + %s = %s\n" (Fixed4.to_string f4_1_25) (Fixed4.to_string f4_2_75) (Fixed4.to_string (Fixed4.add f4_1_25 f4_2_75));
   Printf.printf "%s - %s = %s\n" (Fixed4.to_string f4_2_75) (Fixed4.to_string f4_1_25) (Fixed4.to_string (Fixed4.sub f4_2_75 f4_1_25));
   Printf.printf "%s * %s = %s\n" (Fixed4.to_string f4_1_25) (Fixed4.to_string f4_2_75) (Fixed4.to_string (Fixed4.mul f4_1_25 f4_2_75));
+  Printf.printf "%s * %s = %s\n" (Fixed4.to_string f4_2) (Fixed4.to_string f4_3) (Fixed4.to_string (Fixed4.mul f4_2 f4_3));
   Printf.printf "%s / %s = %s\n" (Fixed4.to_string f4_2_75) (Fixed4.to_string f4_1_25) (Fixed4.to_string (Fixed4.div f4_2_75 f4_1_25));
+  Printf.printf "%s / %s = %s\n" (Fixed4.to_string f4_3) (Fixed4.to_string f4_2) (Fixed4.to_string (Fixed4.div f4_3 f4_2));
   
   (* Test de foreach avec un petit intervalle *)
   print_endline "\n6. Test de foreach (petit échantillon) :";
   print_endline "Fixed4.foreach 0.0 0.25 :";
   Fixed4.foreach (Fixed4.zero) (Fixed4.of_float 0.25) (fun f -> 
     Printf.printf "  %s\n" (Fixed4.to_string f));
+  (* Fixed8.foreach (Fixed8.zero) (Fixed8.of_float 0.25) (fun f -> 
+    Printf.printf "  %s\n" (Fixed8.to_string f)); *)
   
   print_endline "\n✓ Tous les tests des fonctions terminés\n"
 
