@@ -1,4 +1,4 @@
-# Makefile for Day 13 Ex00
+# Makefile for Day 20 Ex00
 # Compiler: ocamlopt as required
 
 .PHONY: all test clean fclean re

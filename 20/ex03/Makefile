@@ -1,12 +1,12 @@
-# Makefile - Day 13 Exercise 01
+# Makefile - Day 20 Exercise 03
 # Compilation: ocamlopt
-# Files: people.ml, doctor.ml, main.ml
+# Files: people.ml, doctor.ml, dalek.ml, army.ml, main.ml
 
 .PHONY: all test clean fclean re
 
 OCAML = ocamlopt
-TARGET = doctor_test
-SOURCES = people.ml doctor.ml main.ml
+TARGET = army_test
+SOURCES = people.ml doctor.ml dalek.ml army.ml main.ml
 
 all: $(TARGET)
 

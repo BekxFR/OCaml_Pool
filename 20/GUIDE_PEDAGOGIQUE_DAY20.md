@@ -1,8 +1,8 @@
-# Guide Pédagogique - Day 13 : Programmation Orientée Objet en OCaml
+# Guide Pédagogique - Day 20 : Programmation Orientée Objet en OCaml
 
 ## 📋 Table des matières
 
-1. [But du Day 13](#but-du-day-13)
+1. [But du Day 20](#but-du-day-20)
 2. [Concepts fondamentaux](#concepts-fondamentaux)
 3. [Progression pédagogique des exercices](#progression-pédagogique)
 4. [Exercice 00 : Classe simple](#exercice-00)
@@ -15,7 +15,7 @@
 
 ---
 
-## 🎯 But du Day 13
+## 🎯 But du Day 20
 
 ### Objectif principal
 
@@ -887,7 +887,7 @@ Ex04: Système complet
 - [OCaml Manual - Objects](https://ocaml.org/manual/objectexamples.html)
 - [Real World OCaml - Objects](https://dev.realworldocaml.org/objects.html)
 
-### Concepts avancés (hors scope Day 13)
+### Concepts avancés (hors scope Day 20)
 
 - Héritage et polymorphisme
 - Classes virtuelles et abstraites
@@ -902,7 +902,7 @@ Ex04: Système complet
 
 ---
 
-**Auteur** : Guide pédagogique Day 13 - OCaml Piscine  
+**Auteur** : Guide pédagogique Day 20 - OCaml Piscine  
 **Date** : Novembre 2025  
 **Thème** : Doctor Who Universe  
 **Paradigme** : Programmation Orientée Objet en OCaml
