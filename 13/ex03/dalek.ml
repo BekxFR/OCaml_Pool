@@ -1,21 +1,13 @@
-(* Class dalek - Day 13 Exercise 03
- * Respect des règles:
- * - Style fonctionnel
- * - Pas de open, for, while
- * - Stdlib modules autorisés
- *)
-
-(* Fonction pour générer un nom aléatoire de Dalek *)
-let generate_dalek_name () : string =
-  let suffixes = [|"Sec"; "Caan"; "Jast"; "Thay"; "Khan"; "Rabe"; "Zalk"; 
-                   "Taan"; "Ruk"; "Vex"; "Zor"; "Gan"; "Lek"; "Mor"|] in
-  let random_suffix = suffixes.(Random.int (Array.length suffixes)) in
-  "Dalek" ^ random_suffix
+(* Class dalek *)
 
 class dalek =
 object (self)
   (* Attributs *)
-  val name : string = generate_dalek_name ()
+  val name : string =
+    let suffixes = [|"Sec"; "Caan"; "Jast"; "Thay"; "Khan"; "Rabe"; "Zalk"; 
+                   "Taan"; "Ruk"; "Vex"; "Zor"; "Gan"; "Lek"; "Mor"|] in
+    let random_suffix = suffixes.(Random.int (Array.length suffixes)) in
+    "Dalek" ^ random_suffix
   val mutable hp : int = 100
   val mutable shield : bool = true
   

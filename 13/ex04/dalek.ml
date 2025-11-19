@@ -1,21 +1,14 @@
-(* Class dalek - Day 13 Exercise 04 - Time War Edition
- * Respect des règles:
- * - Style fonctionnel (pas de while, for, Array)
- * - Pas de open
- *)
-
-(* Fonction pour générer un nom aléatoire de Dalek *)
-let generate_dalek_name () : string =
-  let suffixes = [|"Sec"; "Caan"; "Jast"; "Thay"; "Khan"; "Rabe"; "Zalk"; 
-                   "Taan"; "Ruk"; "Vex"; "Zor"; "Gan"; "Lek"; "Mor"; "Dax"|] in
-  let random_suffix = suffixes.(Random.int (Array.length suffixes)) in
-  "Dalek" ^ random_suffix
+(* Class dalek *)
 
 class dalek =
 object (self)
   (* Attributs *)
-  val name : string = generate_dalek_name ()
-  val mutable hp : int = 120  (* Résistants *)
+  val name : string =
+    let suffixes = [|"Sec"; "Caan"; "Jast"; "Thay"; "Khan"; "Rabe"; "Zalk"; 
+                   "Taan"; "Ruk"; "Vex"; "Zor"; "Gan"; "Lek"; "Mor"|] in
+    let random_suffix = suffixes.(Random.int (Array.length suffixes)) in
+    "Dalek" ^ random_suffix
+  val mutable hp : int = 120
   val mutable shield : bool = true
   
   (* Initializer *)
@@ -83,7 +76,7 @@ object (self)
   
   method attack : int =
     if self#is_alive then begin
-      let damage = 30 + Random.int 21 in (* 30-50 damage - très puissant *)
+      let damage = 30 + Random.int 21 in
       print_endline ("    💥 " ^ name ^ " fires extermination ray! (Damage: " ^ 
                     string_of_int damage ^ ")");
       damage

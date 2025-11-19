@@ -1,4 +1,4 @@
-(* Main - Day 13 Exercise 02
+(* Main - Exercise 02
  * Simulation de bataille entre Doctor, Dalek et humains
  *)
 
@@ -12,7 +12,7 @@ let print_separator () =
 
 let () =
   print_endline "╔═══════════════════════════════════════════════════════════════╗";
-  print_endline "║  Day 13 Ex02: You are a good Daaaaaalek! - BATTLE SIMULATION  ║";
+  print_endline "║      Ex02: You are a good Daaaaaalek! - BATTLE SIMULATION     ║";
   print_endline "╚═══════════════════════════════════════════════════════════════╝";
   print_endline "";
   
@@ -127,9 +127,9 @@ let () =
   
   print_endline "Round 1: Dalek attacks!";
   dalek#talk;
-  let damage_to_doctor = 30 in
-  doctor#set_hp (doctor#get_hp - damage_to_doctor);
-  print_endline ("Dalek deals " ^ string_of_int damage_to_doctor ^ " damage!");
+  let thirty_damage = 30 in
+  doctor#set_hp (doctor#get_hp - thirty_damage);
+  print_endline ("Dalek deals " ^ string_of_int thirty_damage ^ " damage!");
   print_endline ("  " ^ doctor#to_string);
   print_endline "";
   
@@ -142,17 +142,16 @@ let () =
   
   print_endline "Round 3: Dalek attacks again!";
   dalek#talk;
-  let damage2 = 40 in
-  doctor#set_hp (doctor#get_hp - damage2);
-  print_endline ("Dalek deals " ^ string_of_int damage2 ^ " damage!");
+  let forty_damage = 40 in
+  doctor#set_hp (doctor#get_hp - forty_damage);
+  print_endline ("Dalek deals " ^ string_of_int forty_damage ^ " damage!");
   print_endline ("  " ^ doctor#to_string);
   print_endline "";
   
   print_endline "Round 4: Doctor uses strategy!";
   doctor#talk;
-  let damage3 = doctor#sonic_attack in
-  dalek#set_hp (dalek#get_hp - damage3);
-  print_endline ("Doctor deals " ^ string_of_int damage3 ^ " damage!");
+  dalek#set_hp (dalek#get_hp - damage_to_dalek);
+  print_endline ("Doctor deals " ^ string_of_int damage_to_dalek ^ " damage!");
   print_endline ("  " ^ dalek#to_string);
   print_endline "";
   

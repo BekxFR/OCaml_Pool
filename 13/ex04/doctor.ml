@@ -1,8 +1,4 @@
-(* Class doctor - Day 13 Exercise 04 - Time War Edition
- * Respect des règles:
- * - Style fonctionnel (pas de while, for, Array)
- * - Pas de open
- *)
+(* Class doctor *)
 
 class doctor (initial_name : string) (initial_age : int) (initial_sidekick : People.people) =
 object (self)
@@ -10,7 +6,7 @@ object (self)
   val name : string = initial_name
   val mutable age : int = initial_age
   val sidekick : People.people = initial_sidekick
-  val mutable hp : int = 150  (* Plus résistant qu'un humain *)
+  val mutable hp : int = 150
   
   (* Initializer *)
   initializer
@@ -58,7 +54,7 @@ object (self)
         print_endline ("    → " ^ name ^ " takes " ^ string_of_int damage ^ 
                       " damage! (HP: " ^ string_of_int hp ^ ")");
         (* Chance de régénération si HP < 50 *)
-        if hp < 50 && Random.int 100 < 30 then
+        if hp < 50 && Random.int 100 < 40 then
           self#regenerate
       end
     end

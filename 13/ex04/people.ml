@@ -1,8 +1,4 @@
-(* Class people - Day 13 Exercise 04 - Time War Edition
- * Respect des règles:
- * - Style fonctionnel (pas de while, for, Array)
- * - Pas de open
- *)
+(* Class people *)
 
 class people (initial_name : string) =
 object (self)

@@ -1,4 +1,4 @@
-(* Main - Day 13 Exercise 04
+(* Main - Exercise 04
  * Simulation de la Time War sur Galifrey
  *)
 
@@ -11,7 +11,7 @@ let () =
   print_endline "║                                                               ║";
   print_endline "║              THE TIME WAR - BATTLE FOR GALIFREY               ║";
   print_endline "║                                                               ║";
-  print_endline "║           Day 13 Ex04: The Greatest Battle in Time            ║";
+  print_endline "║           OCaml OOP Ex04: The Greatest Battle in Time         ║";
   print_endline "║                                                               ║";
   print_endline "╚═══════════════════════════════════════════════════════════════╝";
   print_endline "";
@@ -56,6 +56,9 @@ let () =
   
   let human2 = new People.people "Sarah Jane" in
   galifrey1#add_people human2;
+  
+  let human3 = new People.people "Melanie Bush" in
+  galifrey1#add_people human3;
   print_endline "";
   
   (* Ajouter les Daleks *)

@@ -1,9 +1,8 @@
-(* army.ml - Day 13 Exercise 04
+(* army.ml
  * Ce fichier est requis dans les fichiers à rendre mais non utilisé
  * car galifrey.ml gère directement les listes de combattants.
  *)
 
-(* Classe army non utilisée dans cet exercice *)
 class ['a] army =
 object (self)
   val mutable members : 'a list = []

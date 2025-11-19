@@ -1,9 +1,4 @@
-(* Class people - Day 13 Exercise 01
- * Respect des règles:
- * - Style fonctionnel (attributs immutables)
- * - Pas de open, for, while
- * - Stdlib modules autorisés
- *)
+(* Class people *)
 
 class people (initial_name : string) =
 object (self)

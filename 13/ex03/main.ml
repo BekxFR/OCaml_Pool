@@ -1,4 +1,4 @@
-(* Main - Day 13 Exercise 03
+(* Main - Exercise 03
  * Simulation de construction et destruction d'armées
  *)
 
@@ -12,7 +12,7 @@ let print_separator () =
 
 let () =
   print_endline "╔═══════════════════════════════════════════════════════════════╗";
-  print_endline "║     Day 13 Ex03: The Day of The Doctor! - Army Management     ║";
+  print_endline "║         Ex03: The Day of The Doctor! - Army Management        ║";
   print_endline "╚═══════════════════════════════════════════════════════════════╝";
   print_endline "";
   
@@ -65,15 +65,20 @@ let () =
   print_endline ("Army size: " ^ string_of_int human_army#size);
   print_endline "";
   
-  human_army#delete;
-  print_endline ("Army size: " ^ string_of_int human_army#size);
-  print_endline "";
-  
   print_endline "--- Removing a human from the back ---";
   human_army#delete_back;
   print_endline ("Army size: " ^ string_of_int human_army#size);
   print_endline "";
   
+  print_endline "--- All humans in the army talk ---";
+  make_people_talk human_army#get_members;
+  print_endline "";
+
+  print_endline "--- Removing humans from the army (front) ---";
+  human_army#delete;
+  print_endline ("Army size: " ^ string_of_int human_army#size);
+  print_endline "";
+
   print_endline "--- Final deletion ---";
   human_army#delete;
   print_endline ("Army size: " ^ string_of_int human_army#size);

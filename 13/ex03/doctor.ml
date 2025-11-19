@@ -1,9 +1,4 @@
-(* Class doctor - Day 13 Exercise 03
- * Respect des règles:
- * - Style fonctionnel (attributs immutables sauf age et hp)
- * - Pas de open, for, while
- * - Stdlib modules autorisés
- *)
+(* Class doctor *)
 
 class doctor (initial_name : string) (initial_age : int) (initial_sidekick : People.people) =
 object (self)

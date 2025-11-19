@@ -1,10 +1,4 @@
-(* Class army - Day 13 Exercise 03
- * Classe paramétrée avec type 'a
- * Respect des règles:
- * - Style fonctionnel
- * - Pas de open, for, while
- * - Stdlib et List modules autorisés
- *)
+(* Class army *)
 
 class ['a] army =
 object (self)
@@ -17,7 +11,7 @@ object (self)
   
   (* add - ajoute un membre à la liste
    * Par défaut, j'ajoute en tête (front) car c'est plus efficace en OCaml
-   * Mais je fournis aussi une méthode add_back pour ajouter à la fin *)
+   * Méthode add_back pour ajouter à la fin *)
   method add (member : 'a) : unit =
     members <- member :: members;
     print_endline "  → New member added to the army (front)"

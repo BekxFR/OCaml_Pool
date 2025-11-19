@@ -1,9 +1,4 @@
-(* Class doctor - Day 13 Exercise 01
- * Respect des règles:
- * - Style fonctionnel (attributs immutables sauf hp qui peut régénérer)
- * - Pas de open, for, while
- * - Stdlib modules autorisés
- *)
+(* Class doctor *)
 
 class doctor (initial_name : string) (initial_age : int) (initial_sidekick : People.people) =
 object (self)
@@ -36,15 +31,15 @@ object (self)
     let time_diff = arrival - start in
     age <- age + time_diff;
     print_endline "";
-    print_endline "╔═══════════════════════════════════════╗";
-    print_endline "║  _____  _    ____  ____ ___ ____     ║";
-    print_endline "║ |_   _|/ \\  |  _ \\|  _ \\_ _/ ___|    ║";
-    print_endline "║   | | / _ \\ | |_) | | | | |\\___ \\    ║";
-    print_endline "║   | |/ ___ \\|  _ <| |_| | | ___) |   ║";
-    print_endline "║   |_/_/   \\_\\_| \\_\\____/___|____/    ║";
-    print_endline "║                                       ║";
-    print_endline "║    VWORP VWORP VWORP VWORP VWORP     ║";
-    print_endline "╚═══════════════════════════════════════╝";
+    print_endline "╔═════════════════════════════════════════╗";
+    print_endline "║    _____  _    ____  ____ ___ ____      ║";
+    print_endline "║   |_   _|/ \\  |  _ \\|  _ \\_ _/ ___|     ║";
+    print_endline "║     | | / _ \\ | |_) | | | | |\\___ \\     ║";
+    print_endline "║     | |/ ___ \\|  _ <| |_| | | ___) |    ║";
+    print_endline "║     |_/_/   \\_\\_| \\_\\____/___|____/     ║";
+    print_endline "║                                         ║";
+    print_endline "║      VWORP VWORP VWORP VWORP VWORP      ║";
+    print_endline "╚═════════════════════════════════════════╝";
     print_endline ("Traveled from year " ^ string_of_int start ^ 
                    " to year " ^ string_of_int arrival);
     print_endline ("Doctor's age changed by " ^ string_of_int time_diff ^ 
@@ -59,4 +54,7 @@ object (self)
   method private regenerate : unit =
     hp <- 100;
     print_endline "✨ Regeneration complete! HP restored to 100 ✨"
+
+  (* method make_nap : unit =
+    self#regenerate *)
 end

@@ -1,8 +1,4 @@
-(* Class galifrey - Day 13 Exercise 04 - Time War Manager
- * Respect des règles:
- * - Style fonctionnel (pas de while, for, Array)
- * - Pas de open
- *)
+(* Class galifrey *)
 
 class galifrey =
 object (self)
@@ -147,7 +143,6 @@ object (self)
     | [] -> ()
     | doctor :: rest ->
         if doctor#is_alive then begin
-          (* Doctors attaquent les Daleks en priorité *)
           let target = self#get_random_alive_dalek in
           match target with
           | Some dalek ->
@@ -163,7 +158,6 @@ object (self)
     | [] -> ()
     | person :: rest ->
         if person#is_alive then begin
-          (* Humans attaquent les Daleks *)
           let target = self#get_random_alive_dalek in
           match target with
           | Some dalek ->
@@ -193,8 +187,7 @@ object (self)
       
       if good_side_alive && evil_side_alive then begin
         print_endline ("╔══════════════════════════════════════════════════════════════╗");
-        print_endline ("║                     ROUND " ^ string_of_int round_number ^ 
-                      "                                   ║");
+        print_endline ("                           ROUND " ^ string_of_int round_number);
         print_endline ("╚══════════════════════════════════════════════════════════════╝");
         print_endline "";
         
@@ -222,7 +215,6 @@ object (self)
         (* Round suivant *)
         battle_round (round_number + 1)
       end else begin
-        (* Fin de la guerre *)
         print_endline "";
         print_endline "╔═══════════════════════════════════════════════════════════════╗";
         print_endline "║                    THE TIME WAR ENDS!                         ║";

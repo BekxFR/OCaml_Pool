@@ -4,15 +4,15 @@
 .PHONY: all test clean fclean re
 
 OCAMLOPT = ocamlopt
-EXEC = people_test
+EXEC = a.out
 
 all: $(EXEC)
 
-$(EXEC): people.ml main.ml
+$(EXEC):
 	$(OCAMLOPT) -o $(EXEC) people.ml main.ml
 
 clean:
-	rm -f *.cmi *.cmx *.o
+	rm -f *.cmi *.cmx *.o *.cmo *.out
 
 fclean: clean
 	rm -f $(EXEC)

@@ -1,10 +1,6 @@
-(* Main - Tests complets pour la défense Day 13 Ex01
- * Teste TOUTES les méthodes de la classe doctor
- *)
-
 let () =
   print_endline "╔════════════════════════════════════════════════════════════════╗";
-  print_endline "║    Day 13 Ex01: Testing class doctor - The Name of the Doctor! ║";
+  print_endline "║       Ex01: Testing class doctor - The Name of the Doctor!     ║";
   print_endline "╚════════════════════════════════════════════════════════════════╝";
   print_endline "";
   
@@ -26,6 +22,7 @@ let () =
   (* Test 4: Méthode talk *)
   print_endline "--- Test 4: Method talk ---";
   tenth_doctor#talk;
+  (* tenth_doctor#make_nap; *)
   print_endline "";
   
   (* Test 5: Méthode use_sonic_screwdriver *)

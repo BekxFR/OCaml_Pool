@@ -1,6 +1,3 @@
-(* Main - Tests complets des méthodes de la classe people
- *)
-
 let () =
   (* Test 1: Création et initializer *)
   print_endline "--- Test 1: Creating Rose Tyler ---";
