@@ -27,7 +27,7 @@ let () =
   print_endline ("Army size: " ^ string_of_int human_army#size);
   print_endline "";
   
-  print_endline "--- Adding humans to the army (front) ---";
+  print_endline "--- Adding humans to the army ---";
   let rose = new People.people "Rose Tyler" in
   human_army#add rose;
   print_endline ("Army size: " ^ string_of_int human_army#size);
@@ -43,9 +43,8 @@ let () =
   print_endline ("Army size: " ^ string_of_int human_army#size);
   print_endline "";
   
-  print_endline "--- Adding a human to the back ---";
   let amy = new People.people "Amy Pond" in
-  human_army#add_back amy;
+  human_army#add amy;
   print_endline ("Army size: " ^ string_of_int human_army#size);
   print_endline "";
   
@@ -60,8 +59,8 @@ let () =
   make_people_talk human_army#get_members;
   print_endline "";
   
-  print_endline "--- Removing humans from the army (front) ---";
-  human_army#delete;
+  print_endline "--- Removing humans from the army ---";
+  human_army#delete_front;
   print_endline ("Army size: " ^ string_of_int human_army#size);
   print_endline "";
   

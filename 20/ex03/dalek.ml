@@ -4,8 +4,8 @@ class dalek =
 object (self)
   (* Attributs *)
   val name : string =
-    let suffixes = [|"Sec"; "Caan"; "Jast"; "Thay"; "Khan"; "Rabe"; "Zalk"; 
-                   "Taan"; "Ruk"; "Vex"; "Zor"; "Gan"; "Lek"; "Mor"|] in
+    let suffixes = [|"Bek"; "Kah"; "Sec"; "Caan"; "Jast"; "Thay"; "Khan"; "Rabe"; "Zalk"; 
+                   "Meh"; "Taan"; "Ruk"; "Vex"; "Zor"; "Gan"; "Lek"; "Mor"|] in
     let random_suffix = suffixes.(Random.int (Array.length suffixes)) in
     "Dalek" ^ random_suffix
   val mutable hp : int = 100

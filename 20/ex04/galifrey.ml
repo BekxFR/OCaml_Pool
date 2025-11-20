@@ -3,9 +3,9 @@
 class galifrey =
 object (self)
   (* Attributs - 3 listes de combattants *)
-  val mutable dalek_members : Dalek.dalek list = []
-  val mutable doctor_members : Doctor.doctor list = []
-  val mutable people_members : People.people list = []
+  val dalek_members : Dalek.dalek Army.army = new Army.army
+  val doctor_members : Doctor.doctor Army.army = new Army.army
+  val people_members : People.people Army.army = new Army.army
   
   (* Initializer *)
   initializer
@@ -16,13 +16,22 @@ object (self)
   
   (* Méthodes pour ajouter des membres *)
   method add_dalek (dalek : Dalek.dalek) : unit =
-    dalek_members <- dalek :: dalek_members
+    dalek_members#add dalek
   
   method add_doctor (doctor : Doctor.doctor) : unit =
-    doctor_members <- doctor :: doctor_members
+    doctor_members#add doctor
   
   method add_people (person : People.people) : unit =
-    people_members <- person :: people_members
+    people_members#add person
+
+  method get_daleks : Dalek.dalek list =
+    dalek_members#get_members
+  
+  method get_doctors : Doctor.doctor list =
+    doctor_members#get_members
+  
+  method get_people : People.people list =
+    people_members#get_members
   
   (* Méthode pour vérifier si une liste contient des survivants *)
   method private any_alive_in_dalek_list (daleks : Dalek.dalek list) : bool =
@@ -76,9 +85,9 @@ object (self)
   
   (* Méthode pour compter les survivants *)
   method private count_alive : (int * int * int) =
-    let alive_daleks = List.length (self#filter_alive_daleks dalek_members) in
-    let alive_doctors = List.length (self#filter_alive_doctors doctor_members) in
-    let alive_people = List.length (self#filter_alive_people people_members) in
+    let alive_daleks = List.length (self#filter_alive_daleks self#get_daleks) in
+    let alive_doctors = List.length (self#filter_alive_doctors self#get_doctors) in
+    let alive_people = List.length (self#filter_alive_people self#get_people) in
     (alive_daleks, alive_doctors, alive_people)
   
   (* Méthode pour afficher le statut *)
@@ -94,7 +103,7 @@ object (self)
   
   (* Méthode pour sélectionner une cible aléatoire vivante dans une liste *)
   method private get_random_alive_dalek : Dalek.dalek option =
-    let alive = self#filter_alive_daleks dalek_members in
+    let alive = self#filter_alive_daleks self#get_daleks in
     match alive with
     | [] -> None
     | _ -> 
@@ -102,7 +111,7 @@ object (self)
         Some (List.nth alive index)
   
   method private get_random_alive_doctor : Doctor.doctor option =
-    let alive = self#filter_alive_doctors doctor_members in
+    let alive = self#filter_alive_doctors self#get_doctors in
     match alive with
     | [] -> None
     | _ ->
@@ -110,7 +119,7 @@ object (self)
         Some (List.nth alive index)
   
   method private get_random_alive_people : People.people option =
-    let alive = self#filter_alive_people people_members in
+    let alive = self#filter_alive_people self#get_people in
     match alive with
     | [] -> None
     | _ ->
@@ -193,20 +202,20 @@ object (self)
         
         (* Phase 1: Daleks attaquent *)
         print_endline ">>> Daleks Phase <<<";
-        self#daleks_attack dalek_members;
+        self#daleks_attack self#get_daleks;
         print_endline "";
         
         (* Phase 2: Doctors attaquent *)
-        if self#any_alive_in_doctor_list doctor_members then begin
+        if self#any_alive_in_doctor_list self#get_doctors then begin
           print_endline ">>> Doctors Phase <<<";
-          self#doctors_attack doctor_members;
+          self#doctors_attack self#get_doctors;
           print_endline ""
         end;
         
         (* Phase 3: Humans attaquent *)
-        if self#any_alive_in_people_list people_members then begin
+        if self#any_alive_in_people_list self#get_people then begin
           print_endline ">>> Humans Phase <<<";
-          self#people_attack people_members;
+          self#people_attack self#get_people;
           print_endline ""
         end;
         

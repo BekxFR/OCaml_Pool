@@ -6,7 +6,7 @@ object (self)
   val name : string = initial_name
   val hp : int = 100
   
-  (* Initializer - message créatif Doctor Who *)
+  (* Initializer *)
   initializer
     print_endline ("New person created: " ^ name ^ " with " ^ 
                    string_of_int hp ^ " HP. Allons-y!")

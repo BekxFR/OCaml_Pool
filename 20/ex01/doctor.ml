@@ -8,7 +8,7 @@ object (self)
   val sidekick : People.people = initial_sidekick
   val mutable hp : int = 100
   
-  (* Initializer - message créatif Doctor Who *)
+  (* Initializer *)
   initializer
     print_endline ("The Doctor has arrived! Name: " ^ name ^ 
                    ", Age: " ^ string_of_int age ^ 
