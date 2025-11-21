@@ -1,7 +1,4 @@
-(* army.ml
- * Ce fichier est requis dans les fichiers à rendre mais non utilisé
- * car galifrey.ml gère directement les listes de combattants.
- *)
+(* Class army *)
 
 class ['a] army =
 object (self)

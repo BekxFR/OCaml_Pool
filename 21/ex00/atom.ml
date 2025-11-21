@@ -11,8 +11,8 @@ object (self)
   
   (* to_string - describe the atom *)
   method to_string : string =
-    self#name ^ " (" ^ self#symbol ^ ", Z=" ^ 
-    string_of_int self#atomic_number ^ ")"
+    self#name ^ ": [" ^ self#symbol ^ ", Z=" ^ 
+    string_of_int self#atomic_number ^ "]"
   
   (* equals - compare two atoms by atomic number *)
   method equals (other : atom) : bool =
@@ -20,7 +20,6 @@ object (self)
 end
 
 (* Concrete atom classes *)
-
 class hydrogen =
 object
   inherit atom

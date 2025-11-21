@@ -65,7 +65,7 @@ object (self)
         print_endline ("    💀 " ^ name ^ " is destroyed!");
         self#die
       end else begin
-        print_endline ("    → " ^ name ^ " takes " ^ string_of_int actual_damage ^ 
+        print_endline ("    -> " ^ name ^ " takes " ^ string_of_int actual_damage ^ 
                       " damage! (HP: " ^ string_of_int hp ^ ")");
         (* Le shield change d'état après chaque attaque *)
         shield <- not shield;

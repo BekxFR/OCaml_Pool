@@ -33,12 +33,6 @@ object (self)
       count [] atoms
     in
     
-    (* Fonction pour formater l'affichage d'un élément *)
-    let format_element (symbol, count) =
-      if count = 1 then symbol
-      else symbol ^ string_of_int count
-    in
-    
     (* Fonction de tri selon les règles de Hill:
      * 1. C en premier
      * 2. H en second
@@ -50,6 +44,12 @@ object (self)
       let others = List.filter (fun (s, _) -> s <> "C" && s <> "H") counts in
       let sorted_others = List.sort (fun (s1, _) (s2, _) -> compare s1 s2) others in
       c_count @ h_count @ sorted_others
+    in
+    
+    (* Fonction pour formater l'affichage d'un élément *)
+    let format_element (symbol, count) =
+      if count = 1 then symbol
+      else symbol ^ string_of_int count
     in
     
     let counts = count_atoms atoms in

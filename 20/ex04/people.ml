@@ -37,7 +37,7 @@ object (self)
         print_endline ("    💀 " ^ name ^ " has been eliminated!");
         self#die
       end else
-        print_endline ("    → " ^ name ^ " takes " ^ string_of_int damage ^ 
+        print_endline ("    -> " ^ name ^ " takes " ^ string_of_int damage ^ 
                       " damage! (HP: " ^ string_of_int hp ^ ")")
     end
   

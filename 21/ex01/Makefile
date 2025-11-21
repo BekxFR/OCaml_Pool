@@ -22,10 +22,12 @@ $(NAME): $(CMX)
 
 # Règle de compilation OCaml natif
 %.cmx: %.ml
+	$(MAKE) -C $(ATOM_DIR)
 	$(OCAMLOPT) -I $(ATOM_DIR) -c $<
 
 # Nettoyage des fichiers temporaires
 clean:
+	$(MAKE) -C $(ATOM_DIR) clean
 	rm -f *.cm[iox] *.o
 
 # Nettoyage complet
@@ -36,7 +38,7 @@ fclean: clean
 re: fclean all
 
 # Exécution après compilation
-run: all
+test: all
 	./$(NAME)
 
-.PHONY: all clean fclean re run
+.PHONY: all clean fclean re test

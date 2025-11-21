@@ -1,4 +1,3 @@
-# Makefile - Day 20 Exercise 03
 # Compilation: ocamlopt
 # Files: people.ml, doctor.ml, dalek.ml, army.ml, main.ml
 

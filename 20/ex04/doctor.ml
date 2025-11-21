@@ -51,7 +51,7 @@ object (self)
         print_endline ("    💀 " ^ name ^ " falls in battle!");
         print_endline (name ^ ": The Doctor is regenerating...");
       end else begin
-        print_endline ("    → " ^ name ^ " takes " ^ string_of_int damage ^ 
+        print_endline ("    -> " ^ name ^ " takes " ^ string_of_int damage ^ 
                       " damage! (HP: " ^ string_of_int hp ^ ")");
         (* Chance de régénération si HP < 50 *)
         if hp < 50 && Random.int 100 < 40 then

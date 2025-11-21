@@ -251,7 +251,7 @@ let () =
   print_endline "--- Destroying the massive army ---";
   let rec destroy_all () =
     if massive_army#is_empty then
-      print_endline "  → Army completely destroyed"
+      print_endline " -> Army completely destroyed"
     else begin
       massive_army#delete;
       destroy_all ()
