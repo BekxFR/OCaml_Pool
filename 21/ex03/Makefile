@@ -33,6 +33,7 @@ $(NAME): $(CMX)
 
 # Règle de compilation OCaml natif
 %.cmx: %.ml
+	$(MAKE) -C $(ALK_DIR)
 	$(OCAMLOPT) $(OCAML_FLAGS) -c $<
 
 # Nettoyage des fichiers temporaires
@@ -41,13 +42,14 @@ clean:
 
 # Nettoyage complet
 fclean: clean
+	$(MAKE) -C $(ALK_DIR) fclean
 	rm -f $(NAME)
 
 # Reconstruction complète
 re: fclean all
 
 # Exécution après compilation
-run: all
+test: all
 	./$(NAME)
 
-.PHONY: all clean fclean re run
+.PHONY: all clean fclean re test

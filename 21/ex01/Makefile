@@ -27,7 +27,7 @@ $(NAME): $(CMX)
 
 # Nettoyage des fichiers temporaires
 clean:
-	$(MAKE) -C $(ATOM_DIR) clean
+	$(MAKE) -C $(ATOM_DIR) fclean
 	rm -f *.cm[iox] *.o
 
 # Nettoyage complet

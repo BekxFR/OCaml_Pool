@@ -20,7 +20,14 @@ OCAMLOPT = ocamlopt
 OCAML_FLAGS = -I $(ATOM_DIR) -I $(MOL_DIR)
 
 # Cible par défaut
+# all: base $(NAME)
 all: $(NAME)
+
+# Précompilation des dépendances
+# base:
+# 	@echo "Compiling dependencies..."
+# 	$(MAKE) -C $(ATOM_DIR)
+# 	$(MAKE) -C $(MOL_DIR)
 
 # Compilation de l'exécutable natif
 $(NAME): $(CMX)
@@ -28,6 +35,7 @@ $(NAME): $(CMX)
 
 # Règle de compilation OCaml natif
 %.cmx: %.ml
+	$(MAKE) -C $(MOL_DIR)
 	$(OCAMLOPT) $(OCAML_FLAGS) -c $<
 
 # Nettoyage des fichiers temporaires
@@ -36,13 +44,14 @@ clean:
 
 # Nettoyage complet
 fclean: clean
+	$(MAKE) -C $(MOL_DIR) fclean
 	rm -f $(NAME)
 
 # Reconstruction complète
 re: fclean all
 
 # Exécution après compilation
-run: all
+test: all
 	./$(NAME)
 
-.PHONY: all clean fclean re run
+.PHONY: all clean fclean re test

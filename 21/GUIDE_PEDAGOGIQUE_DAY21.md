@@ -538,7 +538,7 @@ With 1 O2: Carbon (C) + 2 Water (H2O)
 
 ## Conclusion
 
-Ledémontre comment OCaml peut modéliser des domaines scientifiques complexes avec élégance. La combinaison de:
+Le Day 21 démontre comment OCaml peut modéliser des domaines scientifiques complexes avec élégance. La combinaison de:
 
 - **OOP** (classes, héritage, polymorphisme)
 - **Programmation fonctionnelle** (immutabilité, récursion)
