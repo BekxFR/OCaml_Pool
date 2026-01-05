@@ -47,19 +47,19 @@ let () =
   
   (* Test 6: Balance method *)
   print_endline "--- Test 6: Calling balance method ---";
-  methane_comb#balance;
-  water_synth#balance;
+  let _ = methane_comb#balance in
+  let _ = water_synth#balance in
   print_endline "Balance methods called successfully";
   print_endline "";
   
   (* Test 7: Create an unbalanced reaction manually *)
   print_endline "--- Test 7: Testing unbalanced reaction ---";
   let unbalanced_reaction =
-    object
+    object (self)
       inherit Reaction.reaction
       
       val start = [
-        ((Alkane.methane () :> Molecule.molecule), 1)
+        ((new Alkane.methane :> Molecule.molecule), 1)
       ]
       
       val result = [
@@ -68,7 +68,7 @@ let () =
       
       method get_start = start
       method get_result = result
-      method balance = ()
+      method balance : Reaction.reaction = (self :> Reaction.reaction)
     end
   in
   print_endline ("Unbalanced reaction: " ^ unbalanced_reaction#to_string);

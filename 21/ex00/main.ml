@@ -3,7 +3,7 @@
  *)
 
 let () =
-  print_endline "===Ex00: Testing Atoms ===";
+  print_endline "=== Ex00: Testing Atoms ===";
   print_endline "";
   
   (* Create atoms *)
@@ -15,7 +15,7 @@ let () =
   let cl = new Atom.chlorine in
   print_endline "";
   
-  print_endline "--- Test 1: Atom descriptions ---";
+  print_endline "Test 1: Atom descriptions";
   print_endline h#to_string;
   print_endline c#to_string;
   print_endline o#to_string;
@@ -25,7 +25,7 @@ let () =
   print_endline "";
   
   (* Test 2: Individual properties *)
-  print_endline "--- Test 2: Individual properties ---";
+  print_endline "Test 2: Individual properties";
   print_endline ("Hydrogen - Name: " ^ h#name ^ ", Symbol: " ^ h#symbol ^ 
                 ", Z: " ^ string_of_int h#atomic_number);
   print_endline ("Carbon - Name: " ^ c#name ^ ", Symbol: " ^ c#symbol ^ 
@@ -33,7 +33,7 @@ let () =
   print_endline "";
   
   (* Test 3: equals method *)
-  print_endline "--- Test 3: Testing equals ---";
+  print_endline "Test 3: Testing equals";
   let h2 = new Atom.hydrogen in
   print_endline ("h equals h2: " ^ string_of_bool (h#equals h2));
   print_endline ("h equals c: " ^ string_of_bool (h#equals c));
@@ -41,7 +41,7 @@ let () =
   print_endline "";
   
   (* Test 4: Polymorphism - list of atoms *)
-  print_endline "--- Test 4: List of different atoms ---";
+  print_endline "Test 4: List of different atoms";
   let atoms : Atom.atom list = [
     (h :> Atom.atom);
     (c :> Atom.atom);

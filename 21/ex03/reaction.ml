@@ -77,7 +77,7 @@ object (self)
     with _ -> false
   
   (* Méthode virtuelle pour équilibrer la réaction *)
-  method virtual balance : unit
+  method virtual balance : reaction
   
   (* Méthode to_string *)
   method to_string : string =
@@ -95,11 +95,11 @@ end
 (* Classe concrète: combustion du méthane (équilibrée manuellement) *)
 (* CH4 + 2 O2 -> CO2 + 2 H2O *)
 class methane_combustion =
-object
+object (self)
   inherit reaction
   
   val start_molecules = [
-    ((Alkane.methane () :> Molecule.molecule), 1);
+    ((new Alkane.methane :> Molecule.molecule), 1);
     ((new Molecule.carbon_dioxide :> Molecule.molecule), 2)  (* On utilise CO2 comme O2 temporairement *)
   ]
   
@@ -111,13 +111,14 @@ object
   method get_start = start_molecules
   method get_result = result_molecules
   
-  method balance = ()  (* Déjà équilibré *)
+  method balance : reaction =
+    (self :> reaction)  (* Déjà équilibré *)
 end
 
 (* Classe concrète: synthèse de l'eau *)
 (* 2 H2 + O2 -> 2 H2O *)
 class water_synthesis =
-object
+object (self)
   inherit reaction
   
   val start_list = [
@@ -132,5 +133,6 @@ object
   method get_start = start_list
   method get_result = result_list
   
-  method balance = ()  (* Déjà équilibré *)
+  method balance : reaction =
+    (self :> reaction)  (* Déjà équilibré *)
 end

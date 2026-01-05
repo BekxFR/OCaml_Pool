@@ -8,10 +8,10 @@ let () =
   
   (* Test 1: Create specific alkanes *)
   print_endline "--- Test 1: Creating specific alkanes ---";
-  let methane = Alkane.methane () in
-  let ethane = Alkane.ethane () in
-  let octane = Alkane.octane () in
-  let dodecane = Alkane.dodecane () in
+  let methane = new Alkane.methane in
+  let ethane = new Alkane.ethane in
+  let octane = new Alkane.octane in
+  let dodecane = new Alkane.dodecane in
   print_endline "Alkanes created successfully";
   print_endline "";
   
@@ -56,8 +56,8 @@ let () =
   
   (* Test 6: Polymorphism with molecules *)
   print_endline "--- Test 6: Alkanes as molecules ---";
-  let propane = Alkane.propane () in
-  let butane = Alkane.butane () in
+  let propane = new Alkane.propane in
+  let butane = new Alkane.butane in
   let molecules : Molecule.molecule list = [
     (propane :> Molecule.molecule);
     (butane :> Molecule.molecule);
@@ -68,7 +68,7 @@ let () =
   
   (* Test 7: Equals *)
   print_endline "--- Test 7: Testing equals ---";
-  let methane2 = Alkane.methane () in
+  let methane2 = new Alkane.methane in
   print_endline ("methane equals methane2: " ^ 
     string_of_bool (methane#equals (methane2 :> Molecule.molecule)));
   print_endline ("methane equals ethane: " ^ 

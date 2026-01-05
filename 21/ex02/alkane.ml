@@ -41,8 +41,8 @@ object (self)
   method carbon_count = n
 end
 
-(* Fonctions de commodité pour créer des alcanes spécifiques *)
-let methane () = new alkane 1
+(* Fonctions de commodité pour créer des alcanes spécifiques - factory methods *)
+(* let methane () = new alkane 1
 let ethane () = new alkane 2
 let propane () = new alkane 3
 let butane () = new alkane 4
@@ -53,4 +53,64 @@ let octane () = new alkane 8
 let nonane () = new alkane 9
 let decane () = new alkane 10
 let undecane () = new alkane 11
-let dodecane () = new alkane 12
+let dodecane () = new alkane 12 *)
+
+class methane =
+object
+  inherit alkane 1
+end
+
+class ethane =
+object
+  inherit alkane 2
+end
+
+class propane =
+object
+  inherit alkane 3
+end
+
+class butane =
+object
+  inherit alkane 4
+end
+
+class pentane =
+object
+  inherit alkane 5
+end
+
+class hexane =
+object
+  inherit alkane 6
+end
+
+class heptane =
+object
+  inherit alkane 7
+end
+
+class octane =
+object
+  inherit alkane 8
+end
+
+class nonane =
+object
+  inherit alkane 9
+end
+
+class decane =
+object
+  inherit alkane 10
+end
+
+class undecane =
+object
+  inherit alkane 11
+end
+
+class dodecane =
+object
+  inherit alkane 12
+end
