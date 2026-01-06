@@ -100,7 +100,7 @@ object (self)
   
   val start_molecules = [
     ((new Alkane.methane :> Molecule.molecule), 1);
-    ((new Molecule.carbon_dioxide :> Molecule.molecule), 2)  (* On utilise CO2 comme O2 temporairement *)
+    ((new Molecule.dioxygen :> Molecule.molecule), 2)  (* On utilise CO2 comme O2 temporairement *)
   ]
   
   val result_molecules = [
@@ -112,7 +112,7 @@ object (self)
   method get_result = result_molecules
   
   method balance : reaction =
-    (self :> reaction)  (* Déjà équilibré *)
+    (self :> reaction)
 end
 
 (* Classe concrète: synthèse de l'eau *)
@@ -122,8 +122,8 @@ object (self)
   inherit reaction
   
   val start_list = [
-    ((new Molecule.carbon_dioxide :> Molecule.molecule), 2);  (* Utilise CO2 comme H2 temporairement *)
-    ((new Molecule.carbon_dioxide :> Molecule.molecule), 1)   (* Utilise CO2 comme O2 temporairement *)
+    ((new Molecule.dihydrogen :> Molecule.molecule), 2);  (* Utilise CO2 comme H2 temporairement *)
+    ((new Molecule.dioxygen :> Molecule.molecule), 1)   (* Utilise CO2 comme O2 temporairement *)
   ]
   
   val result_list = [
@@ -134,5 +134,5 @@ object (self)
   method get_result = result_list
   
   method balance : reaction =
-    (self :> reaction)  (* Déjà équilibré *)
+    (self :> reaction)
 end

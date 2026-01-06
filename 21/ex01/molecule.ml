@@ -126,3 +126,23 @@ object
   ]
   method name = "Ammonia"
 end
+
+(* Molécule concrète: Dioxygen (O2) *)
+class dioxygen =
+object
+  inherit molecule [
+    new Atom.oxygen;
+    new Atom.oxygen
+  ]
+  method name = "Dioxygen"
+end
+
+(* Molécule concrète: Dihydrogen (H2) *)
+class dihydrogen =
+object
+  inherit molecule [
+    new Atom.hydrogen;
+    new Atom.hydrogen
+  ]
+  method name = "Dihydrogen"
+end

@@ -30,12 +30,30 @@ class alkane_combustion (alkanes : Alkane.alkane list) =
    *)
   let compute_coefficients alkane_list =
     (* Fonction pour calculer les coefficients d'un alcane *)
-    let compute_one_alkane alk =
+    let compute_one_alkane2 alk =
       let n = alk#carbon_count in
       (* Coefficients: (alkane, O2, CO2, H2O) *)
       (* Pour éviter les fractions, on multiplie par 2 *)
-      (2, 2 * n + 3, 2 * n, 2 * (n + 1))
+      (* Formule: 2 CnH(2n+2) + (3n+1) O2 -> 2n CO2 + 2(n+1) H2O *)
+      (2, 3 * n + 1, 2 * n, 2 * (n + 1))
     in
+
+    let compute_one_alkane alk =
+      let n = alk#carbon_count in
+      (* Coefficients multipliés par 2 pour éviter fractions *)
+      let coeff_alk = 2 in
+      let coeff_o2 = 3 * n + 1 in
+      let coeff_co2 = 2 * n in
+      let coeff_h2o = 2 * (n + 1) in
+      
+      (* Calculer le PGCD pour simplifier *)
+      let rec gcd a b = if b = 0 then a else gcd b (a mod b) in
+      let pgcd = gcd (gcd (gcd coeff_alk coeff_o2) coeff_co2) coeff_h2o in
+      
+      (* Diviser par le PGCD *)
+      (coeff_alk / pgcd, coeff_o2 / pgcd, coeff_co2 / pgcd, coeff_h2o / pgcd)
+    in
+
     
     (* Calculer pour chaque alcane et agréger *)
     let coeffs_list = List.map compute_one_alkane alkane_list in
@@ -85,19 +103,17 @@ object (self)
   
   val start = start_list
   val result = result_list
-  val balanced_ref = ref false
   
-  method get_start = 
-    if not !balanced_ref then raise Reaction.UnbalancedReaction
-    else start
+  (* Méthodes get_start et get_result: pas d'exception car déjà équilibré *)
+  method get_start = start
   
-  method get_result = 
-    if not !balanced_ref then raise Reaction.UnbalancedReaction
-    else result
+  method get_result = result
   
-  method balance =
-    balanced_ref := true
+  (* balance: retourne self car les coefficients sont déjà calculés correctement *)
+  method balance : Reaction.reaction =
+    (self :> Reaction.reaction)
   
-  (* Méthode pour vérifier si équilibré (override) *)
-  method is_balanced = !balanced_ref
+  (* is_balanced: utilise la méthode héritée de reaction pour vérifier *)
+  (* Override optionnel: on sait que c'est toujours équilibré *)
+  (* method is_balanced = true *)
 end

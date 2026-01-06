@@ -8,74 +8,84 @@ let () =
   
   (* Test 1: Combustion simple - methane *)
   print_endline "--- Test 1: Methane combustion ---";
-  let methane = Alkane.methane () in
+  let methane = new Alkane.methane in
   let comb_methane = new Alkane_combustion.alkane_combustion [methane] in
   print_endline "Created methane combustion";
   print_endline ("Is balanced initially: " ^ string_of_bool comb_methane#is_balanced);
   
-  (* Tenter d'obtenir start avant balance - devrait échouer *)
   (try
     let _ = comb_methane#get_start in
-    print_endline "ERROR: Should have raised UnbalancedReaction"
+    print_endline "Start molecules retrieved successfully"
   with Reaction.UnbalancedReaction ->
     print_endline "Correctly raised UnbalancedReaction before balance");
   
   (* Équilibrer *)
-  comb_methane#balance;
-  print_endline ("Is balanced after balance: " ^ string_of_bool comb_methane#is_balanced);
-  print_endline ("Reaction: " ^ comb_methane#to_string);
+  let balanced_methane = comb_methane#balance in
+  print_endline ("Is balanced after balance: " ^ string_of_bool balanced_methane#is_balanced);
+  print_endline ("Reaction: " ^ balanced_methane#to_string);
   print_endline "";
   
   (* Test 2: Combustion - ethane *)
   print_endline "--- Test 2: Ethane combustion ---";
-  let ethane = Alkane.ethane () in
+  let ethane = new Alkane.ethane in
   let comb_ethane = new Alkane_combustion.alkane_combustion [ethane] in
-  comb_ethane#balance;
-  print_endline ("Ethane: " ^ comb_ethane#to_string);
+  let balanced_ethane = comb_ethane#balance in
+  print_endline ("Ethane: " ^ balanced_ethane#to_string);
   print_endline "";
   
   (* Test 3: Combustion - propane *)
   print_endline "--- Test 3: Propane combustion ---";
-  let propane = Alkane.propane () in
+  let propane = new Alkane.propane in
   let comb_propane = new Alkane_combustion.alkane_combustion [propane] in
-  comb_propane#balance;
-  print_endline ("Propane: " ^ comb_propane#to_string);
+  let balanced_propane = comb_propane#balance in
+  print_endline ("Propane: " ^ balanced_propane#to_string);
   print_endline "";
   
   (* Test 4: Combustion - octane *)
   print_endline "--- Test 4: Octane combustion ---";
-  let octane = Alkane.octane () in
+  let octane = new Alkane.octane in
   let comb_octane = new Alkane_combustion.alkane_combustion [octane] in
-  comb_octane#balance;
-  print_endline ("Octane: " ^ comb_octane#to_string);
+  let balanced_octane = comb_octane#balance in
+  print_endline ("Octane: " ^ balanced_octane#to_string);
   print_endline "";
   
   (* Test 5: Vérifier les coefficients *)
   print_endline "--- Test 5: Verify coefficients ---";
   let verify_combustion name alk =
     let comb = new Alkane_combustion.alkane_combustion [alk] in
-    comb#balance;
+    let balanced_comb = comb#balance in
     let n = alk#carbon_count in
-    Printf.printf "%s (n=%d): %s\n" name n comb#to_string;
+    Printf.printf "%s (n=%d): %s\n" name n balanced_comb#to_string;
     
-    (* Vérifier avec la formule: 2 CnH(2n+2) + (2n+3) O2 -> 2n CO2 + 2(n+1) H2O *)
-    Printf.printf "  Expected: 2 x C%dH%d + %d O2 -> %d CO2 + %d H2O\n"
-      n (2*n+2) (2*n+3) (2*n) (2*(n+1))
+    (* Calculer la formule simplifiée *)
+    let coeff_o2 = 3 * n + 1 in
+    let rec gcd a b = if b = 0 then a else gcd b (a mod b) in
+    let pgcd = gcd (gcd (gcd 2 coeff_o2) (2*n)) (2*(n+1)) in
+    let simplified_alk = 2 / pgcd in
+    let simplified_o2 = coeff_o2 / pgcd in
+    let simplified_co2 = (2*n) / pgcd in
+    let simplified_h2o = (2*(n+1)) / pgcd in
+    
+    Printf.printf "  Expected (simplified): %sC%dH%d + %d O2 -> %s%s\n"
+      (if simplified_alk = 1 then "" else string_of_int simplified_alk ^ " x ")
+      n (2*n+2) simplified_o2 
+      (if simplified_co2 = 1 then "CO2 + " else string_of_int simplified_co2 ^ " CO2 + ")
+      (if simplified_h2o = 1 then "H2O" else string_of_int simplified_h2o ^ " H2O")
   in
   
-  verify_combustion "Methane" (Alkane.methane ());
-  verify_combustion "Ethane" (Alkane.ethane ());
-  verify_combustion "Propane" (Alkane.propane ());
-  verify_combustion "Butane" (Alkane.butane ());
+  verify_combustion "Methane" (new Alkane.methane);
+  verify_combustion "Ethane" (new Alkane.ethane);
+  verify_combustion "Propane" (new Alkane.propane);
+  verify_combustion "Butane" (new Alkane.butane);
   print_endline "";
   
   (* Test 6: Multiple alkanes *)
   print_endline "--- Test 6: Multiple alkanes combustion ---";
-  let methane2 = Alkane.methane () in
-  let ethane2 = Alkane.ethane () in
+  let methane2 = new Alkane.methane in
+  let ethane2 = new Alkane.ethane in
   let comb_multi = new Alkane_combustion.alkane_combustion [methane2; ethane2] in
-  comb_multi#balance;
-  print_endline ("Multiple: " ^ comb_multi#to_string);
+  let balanced_multi = comb_multi#balance in
+  print_endline ("Multiple: " ^ balanced_multi#to_string);
   print_endline "";
   
   (* Test 7: Test exception avec liste vide *)
@@ -89,20 +99,20 @@ let () =
   
   (* Test 8: Display reactants and products *)
   print_endline "--- Test 8: Detailed reactants and products ---";
-  let pentane = Alkane.pentane () in
+  let pentane = new Alkane.pentane in
   let comb_pentane = new Alkane_combustion.alkane_combustion [pentane] in
-  comb_pentane#balance;
+  let balanced_pentane = comb_pentane#balance in
   
   print_endline "Pentane combustion:";
   print_endline "Reactants:";
   List.iter (fun (mol, coeff) ->
     Printf.printf "  %d x %s\n" coeff mol#to_string
-  ) comb_pentane#get_start;
+  ) balanced_pentane#get_start;
   
   print_endline "Products:";
   List.iter (fun (mol, coeff) ->
     Printf.printf "  %d x %s\n" coeff mol#to_string
-  ) comb_pentane#get_result;
+  ) balanced_pentane#get_result;
   print_endline "";
   
   print_endline "=== All tests completed ===";
