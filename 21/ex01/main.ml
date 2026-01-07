@@ -3,7 +3,7 @@
  *)
 
 let () =
-  print_endline "===Ex01: Testing Molecules ===";
+  print_endline "=== Ex01: Testing Molecules ===";
   print_endline "";
   
   (* Test 1: Create molecules *)

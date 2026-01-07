@@ -1,4 +1,4 @@
-(* Incomplete_combustion - Day 20 Exercise 05
+(* Incomplete_combustion - Exercise 05
  * Combustion incomplète des alcanes avec différentes quantités d'O2
  * Génère toutes les combinaisons possibles de CO2, CO, C et H2O
  *)
@@ -161,12 +161,12 @@ object (self)
     
     (* Aplatir la structure: au lieu de (o2, outcomes list), 
      * créer une entrée par outcome *)
-    let rec flatten_results acc = function
+    let rec flat_results acc = function
       | [] -> List.rev acc
       | (o2, outcomes) :: rest ->
           let new_entries = List.map (fun outcome -> (o2, outcome)) outcomes in
-          flatten_results (List.rev_append new_entries acc) rest
+          flat_results (List.rev_append new_entries acc) rest
     in
     
-    flatten_results [] all_results
+    flat_results [] all_results
 end

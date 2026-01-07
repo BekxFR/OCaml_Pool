@@ -3,7 +3,7 @@
  *)
 
 let () =
-  print_endline "===Ex04: Testing Alkane Combustion ===";
+  print_endline "=== Ex04: Testing Alkane Combustion ===";
   print_endline "";
   
   (* Test 1: Combustion simple - methane *)

@@ -1,4 +1,4 @@
-# Day 20 - Ex05: Incomplete Combustion
+# Ex05: Incomplete Combustion
 # Compilation des classes OCaml
 
 NAME = ex05

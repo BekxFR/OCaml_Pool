@@ -3,7 +3,7 @@
  *)
 
 let () =
-  print_endline "===Ex03: Testing Reactions ===";
+  print_endline "=== Ex03: Testing Reactions ===";
   print_endline "";
   
   (* Test 1: Create reactions *)
