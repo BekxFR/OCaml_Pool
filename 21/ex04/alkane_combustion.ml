@@ -30,17 +30,11 @@ class alkane_combustion (alkanes : Alkane.alkane list) =
    *)
   let compute_coefficients alkane_list =
     (* Fonction pour calculer les coefficients d'un alcane *)
-    let compute_one_alkane2 alk =
-      let n = alk#carbon_count in
-      (* Coefficients: (alkane, O2, CO2, H2O) *)
-      (* Pour éviter les fractions, on multiplie par 2 *)
-      (* Formule: 2 CnH(2n+2) + (3n+1) O2 -> 2n CO2 + 2(n+1) H2O *)
-      (2, 3 * n + 1, 2 * n, 2 * (n + 1))
-    in
-
     let compute_one_alkane alk =
       let n = alk#carbon_count in
+      (* Coefficients: (alkane, O2, CO2, H2O) *)
       (* Coefficients multipliés par 2 pour éviter fractions *)
+      (* Formule: 2 CnH(2n+2) + (3n+1) O2 -> 2n CO2 + 2(n+1) H2O *)
       let coeff_alk = 2 in
       let coeff_o2 = 3 * n + 1 in
       let coeff_co2 = 2 * n in

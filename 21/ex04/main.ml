@@ -7,7 +7,7 @@ let () =
   print_endline "";
   
   (* Test 1: Combustion simple - methane *)
-  print_endline "--- Test 1: Methane combustion ---";
+  print_endline "Test 1: Methane combustion";
   let methane = new Alkane.methane in
   let comb_methane = new Alkane_combustion.alkane_combustion [methane] in
   print_endline "Created methane combustion";
@@ -26,7 +26,7 @@ let () =
   print_endline "";
   
   (* Test 2: Combustion - ethane *)
-  print_endline "--- Test 2: Ethane combustion ---";
+  print_endline "Test 2: Ethane combustion";
   let ethane = new Alkane.ethane in
   let comb_ethane = new Alkane_combustion.alkane_combustion [ethane] in
   let balanced_ethane = comb_ethane#balance in
@@ -34,7 +34,7 @@ let () =
   print_endline "";
   
   (* Test 3: Combustion - propane *)
-  print_endline "--- Test 3: Propane combustion ---";
+  print_endline "Test 3: Propane combustion";
   let propane = new Alkane.propane in
   let comb_propane = new Alkane_combustion.alkane_combustion [propane] in
   let balanced_propane = comb_propane#balance in
@@ -42,7 +42,7 @@ let () =
   print_endline "";
   
   (* Test 4: Combustion - octane *)
-  print_endline "--- Test 4: Octane combustion ---";
+  print_endline "Test 4: Octane combustion";
   let octane = new Alkane.octane in
   let comb_octane = new Alkane_combustion.alkane_combustion [octane] in
   let balanced_octane = comb_octane#balance in
@@ -50,7 +50,7 @@ let () =
   print_endline "";
   
   (* Test 5: Vérifier les coefficients *)
-  print_endline "--- Test 5: Verify coefficients ---";
+  print_endline "Test 5: Verify coefficients";
   let verify_combustion name alk =
     let comb = new Alkane_combustion.alkane_combustion [alk] in
     let balanced_comb = comb#balance in
@@ -80,7 +80,7 @@ let () =
   print_endline "";
   
   (* Test 6: Multiple alkanes *)
-  print_endline "--- Test 6: Multiple alkanes combustion ---";
+  print_endline "Test 6: Multiple alkanes combustion";
   let methane2 = new Alkane.methane in
   let ethane2 = new Alkane.ethane in
   let comb_multi = new Alkane_combustion.alkane_combustion [methane2; ethane2] in
@@ -89,7 +89,7 @@ let () =
   print_endline "";
   
   (* Test 7: Test exception avec liste vide *)
-  print_endline "--- Test 7: Empty list exception ---";
+  print_endline "Test 7: Empty list exception";
   (try
     let _ = new Alkane_combustion.alkane_combustion [] in
     print_endline "ERROR: Should have raised exception for empty list"
@@ -98,7 +98,7 @@ let () =
   print_endline "";
   
   (* Test 8: Display reactants and products *)
-  print_endline "--- Test 8: Detailed reactants and products ---";
+  print_endline "Test 8: Detailed reactants and products";
   let pentane = new Alkane.pentane in
   let comb_pentane = new Alkane_combustion.alkane_combustion [pentane] in
   let balanced_pentane = comb_pentane#balance in
@@ -114,6 +114,44 @@ let () =
     Printf.printf "  %d x %s\n" coeff mol#to_string
   ) balanced_pentane#get_result;
   print_endline "";
+
+  (* Test de validation des coefficients *)
+  print_endline "Test: Verify all reactions balanced";
+  let verify_balanced name alk =
+    let comb = new Alkane_combustion.alkane_combustion [alk] in
+    assert (comb#is_balanced = true);
+    Printf.printf "%s: ✓ Balanced\n" name
+  in
+  verify_balanced "Methane" (new Alkane.methane);
+  verify_balanced "Ethane" (new Alkane.ethane);
+  verify_balanced "Propane" (new Alkane.propane);
+  verify_balanced "Butane" (new Alkane.butane);
+  verify_balanced "Pentane" (new Alkane.pentane);
+  verify_balanced "Hexane" (new Alkane.hexane);
+  verify_balanced "Heptane" (new Alkane.heptane);
+  verify_balanced "Octane" (new Alkane.octane);
+  verify_balanced "Nonane" (new Alkane.nonane);
+  verify_balanced "Decane" (new Alkane.decane);
+  verify_balanced "Undecane" (new Alkane.undecane);
+  verify_balanced "Dodecane" (new Alkane.dodecane);
+
+
+  (* Test de duplication d'alcanes *)
+  print_endline "Test: Multiple same alkanes";
+  let double_dodecane = new Alkane_combustion.alkane_combustion 
+    [new Alkane.dodecane; new Alkane.dodecane] in
+  print_endline ("Double dodecane: " ^ double_dodecane#to_string);
+
+  (* Test avec liste longue *)
+  print_endline "Test: Many different alkanes";
+  let many = new Alkane_combustion.alkane_combustion [
+    new Alkane.methane;
+    new Alkane.ethane;
+    new Alkane.propane;
+    new Alkane.butane
+  ] in
+  print_endline ("Complex: " ^ many#to_string);
+
   
   print_endline "=== All tests completed ===";
   print_endline ""
