@@ -185,7 +185,7 @@ With 3 O2: 2 CO + C + 4 H₂O
 Found 40 incomplete combustion scenarios
 ```
 
-**Pourquoi 40 ?**
+**Pourquoi 13 ?**
 - Pour chaque quantité d'O₂ de 1 à 4 (combustion complète = 5 O₂)
 - Chaque quantité génère plusieurs combinaisons de CO₂/CO/C
 - Total : plusieurs dizaines de scénarios possibles
