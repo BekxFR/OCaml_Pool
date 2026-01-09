@@ -19,7 +19,6 @@ let () =
   with Reaction.UnbalancedReaction ->
     print_endline "Correctly raised UnbalancedReaction before balance");
   
-  (* Équilibrer *)
   let balanced_methane = comb_methane#balance in
   print_endline ("Is balanced after balance: " ^ string_of_bool balanced_methane#is_balanced);
   print_endline ("Reaction: " ^ balanced_methane#to_string);
@@ -120,7 +119,7 @@ let () =
   let verify_balanced name alk =
     let comb = new Alkane_combustion.alkane_combustion [alk] in
     assert (comb#is_balanced = true);
-    Printf.printf "%s: ✓ Balanced\n" name
+    Printf.printf "%s: - Balanced\n" name
   in
   verify_balanced "Methane" (new Alkane.methane);
   verify_balanced "Ethane" (new Alkane.ethane);

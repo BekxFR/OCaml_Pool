@@ -1,4 +1,4 @@
-NAME = ex00
+NAME = watchtower
 
 SOURCES = watchtower.ml main.ml
 

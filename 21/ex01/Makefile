@@ -3,41 +3,31 @@
 
 NAME = ex01
 
-# Fichiers sources
 ATOM_DIR = ../ex00
 SOURCES = molecule.ml main.ml
 
-# Fichiers objets natifs
 CMX = $(SOURCES:.ml=.cmx)
 
-# Compilateur natif
 OCAMLOPT = ocamlopt
 
-# Cible par défaut
 all: $(NAME)
 
-# Compilation de l'exécutable natif
 $(NAME): $(CMX)
 	$(OCAMLOPT) -I $(ATOM_DIR) -o $(NAME) $(ATOM_DIR)/atom.cmx $(CMX)
 
-# Règle de compilation OCaml natif
 %.cmx: %.ml
 	$(MAKE) -C $(ATOM_DIR)
 	$(OCAMLOPT) -I $(ATOM_DIR) -c $<
 
-# Nettoyage des fichiers temporaires
 clean:
 	$(MAKE) -C $(ATOM_DIR) fclean
 	rm -f *.cm[iox] *.o
 
-# Nettoyage complet
 fclean: clean
 	rm -f $(NAME)
 
-# Reconstruction complète
 re: fclean all
 
-# Exécution après compilation
 test: all
 	./$(NAME)
 

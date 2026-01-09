@@ -22,7 +22,6 @@ end
 
 (* Classe alkane_combustion étendue avec combustion incomplète *)
 class incomplete_combustion (alkanes : Alkane.alkane list) =
-  (* Vérifier que la liste n'est pas vide *)
   let () = 
     if alkanes = [] then
       failwith "incomplete_combustion: empty alkane list"

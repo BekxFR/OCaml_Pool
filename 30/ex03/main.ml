@@ -11,12 +11,11 @@ let print_string_try t =
   | Try.Success v -> Printf.printf "Success(\"%s\")\n" v
   | Try.Failure e -> Printf.printf "Failure(%s)\n" (Printexc.to_string e)
 
-let separator msg =
-  Printf.printf "\n=== %s ===\n" msg
-
+let () =
+  print_endline "=== Ex03 : Tests module Try (Monade d'exceptions) ===";
+  
 (* Test 1: return - Créer un Success *)
-let test_return () =
-  separator "Test 1: return";
+  print_endline "Test 1: return";
   let t1 = Try.return 42 in
   print_endline "Try.return 42 =";
   print_int_try t1;
@@ -26,8 +25,7 @@ let test_return () =
   print_string_try t2
 
 (* Test 2: bind - Appliquer des fonctions *)
-let test_bind () =
-  separator "Test 2: bind";
+  print_endline "Test 2: bind";
   
   (* Bind avec succès *)
   print_endline "Cas 1: Success -> fonction qui retourne Success";
@@ -73,8 +71,7 @@ let test_bind () =
   print_int_try result
 
 (* Test 3: recover - Récupérer après erreur *)
-let test_recover () =
-  separator "Test 3: recover";
+  print_endline "Test 3: recover";
   
   (* Recover sur Success (pas d'effet) *)
   print_endline "Cas 1: recover sur Success (fonction non appelée)";
@@ -104,8 +101,7 @@ let test_recover () =
   print_int_try t6
 
 (* Test 4: filter - Filtrer selon prédicat *)
-let test_filter () =
-  separator "Test 4: filter";
+  print_endline "Test 4: filter";
   
   (* Filter avec prédicat satisfait *)
   print_endline "Cas 1: Success avec prédicat satisfait";
@@ -149,8 +145,7 @@ let test_filter () =
   print_int_try result2
 
 (* Test 5: flatten - Aplatir Try imbriqué *)
-let test_flatten () =
-  separator "Test 5: flatten";
+  print_endline "Test 5: flatten";
   
   (* Success of Success *)
   print_endline "Cas 1: Success of Success";
@@ -187,16 +182,15 @@ let test_flatten () =
   match double_nested with
   | Try.Success inner -> 
       (match inner with
-       | Try.Success v -> Printf.printf "Success (Success %d)\n" v
-       | Try.Failure e -> Printf.printf "Success (Failure %s)\n" (Printexc.to_string e))
+        | Try.Success v -> Printf.printf "Success (Success %d)\n" v
+        | Try.Failure e -> Printf.printf "Success (Failure %s)\n" (Printexc.to_string e))
   | Try.Failure e -> Printf.printf "Failure %s\n" (Printexc.to_string e);
   
   Printf.printf "Après flatten: ";
   print_int_try (Try.flatten double_nested)
 
 (* Test 6: Scénario complet - Division sécurisée *)
-let test_scenario_complet () =
-  separator "Test 6: Scénario complet - Calculatrice sécurisée";
+  print_endline "Test 6: Scénario complet - Calculatrice sécurisée";
   
   (* Division sécurisée *)
   let safe_divide a b =
@@ -267,15 +261,9 @@ let test_scenario_complet () =
     |> (fun m -> Try.filter m (fun x -> x >= 3))
   in
   print_int_try calc6
-
-let () =
-  print_endline "=== Tests du module Try (Monade d'exceptions) ===";
   
-  test_return ();
-  test_bind ();
-  test_recover ();
-  test_filter ();
-  test_flatten ();
-  test_scenario_complet ();
   
-  print_endline "\n=== Tous les tests terminés ! ===";
+  print_endline "";
+  
+  print_endline "=== All tests completed ===";
+  print_endline ""

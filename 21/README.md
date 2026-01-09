@@ -117,6 +117,12 @@ Exemples:
 - Méthane: `2 CH4 + 5 O2 → 2 CO2 + 4 H2O`
 - Octane: `2 C8H18 + 19 O2 → 16 CO2 + 18 H2O`
 
+> 📚 **Documentation détaillée** : Voir [GUIDE_PEDAGOGIQUE_DAY21.md](GUIDE_PEDAGOGIQUE_DAY21.md) - Section "Annexe Technique" pour :
+> - Le calcul détaillé des coefficients stœchiométriques
+> - L'explication de la multiplication par 2 pour éviter les fractions
+> - Le calcul du PGCD avec exemples pas-à-pas
+> - Un tableau récapitulatif pour tous les alcanes
+
 **Compilation**: `make`  
 **Exécution**: `./ex04`
 
@@ -147,33 +153,50 @@ Exemples pour l'éthane (C2H6):
 
 ```
 21/
-├── GUIDE_PEDAGOGIQUE_DAY21.md  # Guide complet avec explications
-├── README.md                    # Ce fichier
+├── GUIDE_PEDAGOGIQUE_DAY21.md       # Guide complet avec explications détaillées
+├── CALCUL_COEFFICIENTS_EXEMPLES.md  # 🔥 Exemples pas-à-pas du calcul des coefficients
+├── README.md                         # Ce fichier
 ├── ex00/
-│   ├── atom.ml                  # Classe virtuelle atom + implémentations
-│   ├── main.ml                  # Tests
+│   ├── atom.ml                       # Classe virtuelle atom + implémentations
+│   ├── main.ml                       # Tests
 │   └── Makefile
 ├── ex01/
-│   ├── molecule.ml              # Classe virtuelle molecule + implémentations
-│   ├── main.ml                  # Tests
+│   ├── molecule.ml                   # Classe virtuelle molecule + implémentations
+│   ├── main.ml                       # Tests
 │   └── Makefile
 ├── ex02/
-│   ├── alkane.ml                # Classe alkane (CnH2n+2)
-│   ├── main.ml                  # Tests
+│   ├── alkane.ml                     # Classe alkane (CnH2n+2)
+│   ├── main.ml                       # Tests
 │   └── Makefile
 ├── ex03/
-│   ├── reaction.ml              # Classe virtuelle reaction
-│   ├── main.ml                  # Tests
+│   ├── reaction.ml                   # Classe virtuelle reaction
+│   ├── main.ml                       # Tests
 │   └── Makefile
 ├── ex04/
-│   ├── alkane_combustion.ml     # Combustion avec équilibrage
-│   ├── main.ml                  # Tests
+│   ├── alkane_combustion.ml          # Combustion avec équilibrage
+│   ├── main.ml                       # Tests
 │   └── Makefile
 └── ex05/
-    ├── incomplete_combustion.ml # Combustion incomplète
-    ├── main.ml                  # Tests
+    ├── incomplete_combustion.ml      # Combustion incomplète
+    ├── main.ml                       # Tests
     └── Makefile
 ```
+
+## 📚 Documentation
+
+- **[README.md](README.md)** : Vue d'ensemble et guide de démarrage rapide
+- **[GUIDE_PEDAGOGIQUE_DAY21.md](GUIDE_PEDAGOGIQUE_DAY21.md)** : Guide complet avec :
+  - Explications détaillées de chaque exercice
+  - Concepts chimiques et OCaml
+  - Section "Annexe Technique" sur les coefficients stœchiométriques
+  - Calcul du PGCD avec exemples
+  - Difficultés courantes et solutions
+  
+- **[CALCUL_COEFFICIENTS_EXEMPLES.md](CALCUL_COEFFICIENTS_EXEMPLES.md)** : 🔥 **Nouveau !**
+  - Exemples pas-à-pas pour le méthane, éthane, propane, butane
+  - Explications visuelles du calcul des coefficients
+  - Tableaux récapitulatifs pour tous les alcanes
+  - Code OCaml commenté
 
 ## Dépendances entre exercices
 

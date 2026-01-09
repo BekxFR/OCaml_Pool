@@ -1,4 +1,4 @@
-NAME = ex01
+NAME = parson
 
 SOURCES = parson.ml main.ml
 

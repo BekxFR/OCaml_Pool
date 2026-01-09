@@ -17,7 +17,6 @@ let () =
   Printf.printf "Found %d incomplete combustion scenarios\n" (List.length ethane_results);
   print_endline "";
   
-  (* Afficher quelques exemples *)
   print_endline "Sample outcomes:";
   let sample_count = min 5 (List.length ethane_results) in
   List.iter (fun (o2, products) ->
@@ -41,7 +40,6 @@ let () =
   Printf.printf "Found %d incomplete combustion scenarios\n" (List.length propane_results);
   print_endline "";
   
-  (* Afficher quelques exemples *)
   print_endline "Sample outcomes (first 8):";
   let sample_count = min 13 (List.length propane_results) in
   List.iter (fun (o2, products) ->
@@ -65,7 +63,6 @@ let () =
   Printf.printf "Found %d incomplete combustion scenarios\n" (List.length methane_results);
   print_endline "";
   
-  (* Afficher tous les résultats pour le méthane (plus petit) *)
   print_endline "All outcomes:";
   List.iter (fun (o2, products) ->
     Printf.printf "With %d O2: " o2;
@@ -109,7 +106,6 @@ let () =
   Printf.printf "Found %d incomplete combustion scenarios\n" (List.length propane_results2);
   print_endline "";
   
-  (* Afficher quelques exemples *)
   print_endline "Sample outcomes (first 8):";
   let sample_count = min 8 (List.length propane_results2) in
   List.iter (fun (o2, products) ->

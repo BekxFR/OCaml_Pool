@@ -224,6 +224,280 @@ end
 - `balance` débloque l'accès aux listes
 - Exception si accès avant équilibrage
 
+---
+
+## 📚 Annexe Technique : Calcul des Coefficients et Simplification
+
+### 1. Calcul des Coefficients Stœchiométriques
+
+#### Explication Simple
+
+Quand on brûle un alcane (comme l'essence dans une voiture), on doit calculer combien d'oxygène (O₂) on a besoin et combien de CO₂ et H₂O on va produire. C'est comme une recette de cuisine : il faut les bonnes proportions !
+
+**Exemple concret** : Pour le méthane (CH₄)
+- On a : 1 atome de carbone (C) et 4 atomes d'hydrogène (H)
+- Chaque C devient CO₂ (il faut 2 oxygènes)
+- Chaque 2 H deviennent H₂O (il faut 1 oxygène)
+
+**Le problème** : Les hydrogènes sont au nombre de 4, donc on va faire 2 molécules d'eau. Pour l'équilibrage, on va parfois obtenir des **fractions** !
+
+#### Explication Avancée : Formule Mathématique
+
+Pour un alcane de formule **CₙH₍₂ₙ₊₂₎**, la combustion complète suit cette équation :
+
+```
+CₙH₍₂ₙ₊₂₎ + O₂ → CO₂ + H₂O
+```
+
+**Calcul des coefficients bruts (avant simplification)** :
+
+1. **Pour le CO₂** : Chaque carbone devient un CO₂
+   - Coefficient CO₂ = **n**
+
+2. **Pour le H₂O** : Chaque paire d'hydrogène devient une H₂O
+   - Coefficient H₂O = **(2n + 2) / 2 = n + 1**
+
+3. **Pour le O₂** : On compte les oxygènes nécessaires
+   - Oxygènes pour CO₂ : 2n (car n × CO₂ et chaque CO₂ a 2 O)
+   - Oxygènes pour H₂O : n + 1 (car (n+1) × H₂O et chaque H₂O a 1 O)
+   - Total oxygènes : 2n + (n + 1) = **3n + 1**
+   - Coefficient O₂ = **(3n + 1) / 2** ⚠️ **FRACTION !**
+
+**Équation brute avec fraction** :
+```
+CₙH₍₂ₙ₊₂₎ + (3n+1)/2 O₂ → n CO₂ + (n+1) H₂O
+```
+
+---
+
+### 2. Format Sans et Avec Multiplication pour la Simplification
+
+#### Le Problème des Fractions
+
+En chimie, on ne peut pas avoir "1.5 molécules" d'O₂ dans une équation chimique. Les coefficients doivent être des **nombres entiers**.
+
+#### Solution : Multiplication par 2
+
+Pour éliminer la fraction `(3n+1)/2`, on **multiplie toute l'équation par 2** :
+
+**Avant multiplication** (avec fraction) :
+```
+1 CₙH₍₂ₙ₊₂₎ + (3n+1)/2 O₂ → n CO₂ + (n+1) H₂O
+```
+
+**Après multiplication par 2** (sans fraction) :
+```
+2 CₙH₍₂ₙ₊₂₎ + (3n+1) O₂ → 2n CO₂ + 2(n+1) H₂O
+```
+
+**Coefficients après multiplication** :
+- Alcane : **2**
+- O₂ : **3n + 1**
+- CO₂ : **2n**
+- H₂O : **2(n + 1) = 2n + 2**
+
+#### Exemples Concrets
+
+**Exemple 1 : Méthane (n = 1)**
+
+Avant multiplication :
+```
+CH₄ + (3×1+1)/2 O₂ → 1 CO₂ + (1+1) H₂O
+CH₄ + 2 O₂ → CO₂ + 2 H₂O   ✓ Pas de fraction !
+```
+
+Après multiplication par 2 (formule générale) :
+```
+2 CH₄ + (3×1+1) O₂ → 2×1 CO₂ + 2×(1+1) H₂O
+2 CH₄ + 4 O₂ → 2 CO₂ + 4 H₂O
+```
+
+**Exemple 2 : Éthane (n = 2)**
+
+Avant multiplication :
+```
+C₂H₆ + (3×2+1)/2 O₂ → 2 CO₂ + (2+1) H₂O
+C₂H₆ + 3.5 O₂ → 2 CO₂ + 3 H₂O   ❌ Fraction !
+```
+
+Après multiplication par 2 :
+```
+2 C₂H₆ + (3×2+1) O₂ → 2×2 CO₂ + 2×(2+1) H₂O
+2 C₂H₆ + 7 O₂ → 4 CO₂ + 6 H₂O   ✓ Pas de fraction !
+```
+
+**Exemple 3 : Propane (n = 3)**
+
+Avant multiplication :
+```
+C₃H₈ + (3×3+1)/2 O₂ → 3 CO₂ + (3+1) H₂O
+C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O   ✓ Pas de fraction !
+```
+
+Après multiplication par 2 (formule générale) :
+```
+2 C₃H₈ + (3×3+1) O₂ → 2×3 CO₂ + 2×(3+1) H₂O
+2 C₃H₈ + 10 O₂ → 6 CO₂ + 8 H₂O
+```
+
+**Observation importante** : Pour le propane, la multiplication par 2 n'était pas nécessaire car il n'y avait déjà pas de fraction. C'est là qu'intervient le **PGCD** pour simplifier !
+
+---
+
+### 3. Le Calcul du PGCD (Plus Grand Commun Diviseur)
+
+#### Pourquoi le PGCD ?
+
+Après avoir multiplié par 2 pour éliminer les fractions, les coefficients peuvent avoir un **diviseur commun**. On veut la forme la plus **simple** de l'équation.
+
+**Exemple** : 
+- `2 C₃H₈ + 10 O₂ → 6 CO₂ + 8 H₂O`
+- Tous les coefficients sont divisibles par 2
+- Forme simplifiée : `C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O`
+
+#### L'Algorithme d'Euclide (Simple)
+
+Le PGCD de deux nombres se calcule ainsi :
+
+```
+pgcd(a, 0) = a
+pgcd(a, b) = pgcd(b, a mod b)  où "mod" est le reste de la division
+```
+
+**En OCaml** :
+```ocaml
+let rec gcd a b = 
+  if b = 0 then a 
+  else gcd b (a mod b)
+```
+
+#### Exemples de Calcul du PGCD
+
+**Exemple 1 : PGCD de 12 et 8**
+
+```
+gcd(12, 8)
+= gcd(8, 12 mod 8)    → 12 mod 8 = 4
+= gcd(8, 4)
+= gcd(4, 8 mod 4)     → 8 mod 4 = 0
+= gcd(4, 0)
+= 4                   ✓ Résultat
+```
+
+**Exemple 2 : PGCD de 15 et 10**
+
+```
+gcd(15, 10)
+= gcd(10, 15 mod 10)  → 15 mod 10 = 5
+= gcd(10, 5)
+= gcd(5, 10 mod 5)    → 10 mod 5 = 0
+= gcd(5, 0)
+= 5                   ✓ Résultat
+```
+
+**Exemple 3 : PGCD de 7 et 3**
+
+```
+gcd(7, 3)
+= gcd(3, 7 mod 3)     → 7 mod 3 = 1
+= gcd(3, 1)
+= gcd(1, 3 mod 1)     → 3 mod 1 = 0
+= gcd(1, 0)
+= 1                   ✓ Résultat (nombres premiers entre eux)
+```
+
+#### PGCD de Plus de 2 Nombres
+
+Pour trouver le PGCD de plusieurs nombres (tous les coefficients), on les combine deux par deux :
+
+```ocaml
+(* PGCD de 4 nombres : a, b, c, d *)
+let pgcd_total = gcd (gcd (gcd a b) c) d
+```
+
+**Exemple concret : Méthane (n=1) après multiplication par 2**
+
+Coefficients : `[2, 4, 2, 4]` (alcane, O₂, CO₂, H₂O)
+
+```
+Étape 1 : gcd(2, 4) = 2
+Étape 2 : gcd(2, 2) = 2
+Étape 3 : gcd(2, 4) = 2
+PGCD final = 2
+```
+
+Division par le PGCD :
+- 2 / 2 = 1 (alcane)
+- 4 / 2 = 2 (O₂)
+- 2 / 2 = 1 (CO₂)
+- 4 / 2 = 2 (H₂O)
+
+**Équation simplifiée** : `CH₄ + 2 O₂ → CO₂ + 2 H₂O` ✓
+
+#### Application Complète : Propane (n = 3)
+
+**Étape 1 : Calcul des coefficients bruts**
+```
+Alcane : 2
+O₂ : 3×3 + 1 = 10
+CO₂ : 2×3 = 6
+H₂O : 2×(3+1) = 8
+```
+
+**Étape 2 : Calcul du PGCD**
+```
+gcd(2, 10) = gcd(10, 2) = gcd(2, 0) = 2
+gcd(2, 6) = gcd(6, 2) = gcd(2, 0) = 2
+gcd(2, 8) = gcd(8, 2) = gcd(2, 0) = 2
+PGCD final = 2
+```
+
+**Étape 3 : Division par le PGCD**
+```
+Alcane : 2 / 2 = 1
+O₂ : 10 / 2 = 5
+CO₂ : 6 / 2 = 3
+H₂O : 8 / 2 = 4
+```
+
+**Équation finale** : `C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O` ✓
+
+#### Code OCaml Complet
+
+```ocaml
+(* Calcul des coefficients pour un alcane de paramètre n *)
+let compute_coefficients n =
+  (* Coefficients après multiplication par 2 *)
+  let coeff_alk = 2 in
+  let coeff_o2 = 3 * n + 1 in
+  let coeff_co2 = 2 * n in
+  let coeff_h2o = 2 * (n + 1) in
+  
+  (* Fonction PGCD *)
+  let rec gcd a b = if b = 0 then a else gcd b (a mod b) in
+  
+  (* Calcul du PGCD de tous les coefficients *)
+  let pgcd = gcd (gcd (gcd coeff_alk coeff_o2) coeff_co2) coeff_h2o in
+  
+  (* Division par le PGCD pour simplifier *)
+  (coeff_alk / pgcd, coeff_o2 / pgcd, coeff_co2 / pgcd, coeff_h2o / pgcd)
+```
+
+#### Tableau Récapitulatif des Alcanes
+
+| n | Alcane | Avant simplification | PGCD | Après simplification |
+|---|--------|---------------------|------|---------------------|
+| 1 | CH₄ | 2 CH₄ + 4 O₂ → 2 CO₂ + 4 H₂O | 2 | CH₄ + 2 O₂ → CO₂ + 2 H₂O |
+| 2 | C₂H₆ | 2 C₂H₆ + 7 O₂ → 4 CO₂ + 6 H₂O | 1 | 2 C₂H₆ + 7 O₂ → 4 CO₂ + 6 H₂O |
+| 3 | C₃H₈ | 2 C₃H₈ + 10 O₂ → 6 CO₂ + 8 H₂O | 2 | C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O |
+| 4 | C₄H₁₀ | 2 C₄H₁₀ + 13 O₂ → 8 CO₂ + 10 H₂O | 1 | 2 C₄H₁₀ + 13 O₂ → 8 CO₂ + 10 H₂O |
+| 5 | C₅H₁₂ | 2 C₅H₁₂ + 16 O₂ → 10 CO₂ + 12 H₂O | 2 | C₅H₁₂ + 8 O₂ → 5 CO₂ + 6 H₂O |
+| 8 | C₈H₁₈ | 2 C₈H₁₈ + 25 O₂ → 16 CO₂ + 18 H₂O | 1 | 2 C₈H₁₈ + 25 O₂ → 16 CO₂ + 18 H₂O |
+
+**Observation** : Le PGCD est toujours 1 ou 2 selon la parité de (3n + 1).
+
+---
+
 ### Exercice 05: Incomplete Combustion (Combustion incomplète)
 
 **Objectif**: Générer toutes les combustions incomplètes possibles avec quantités variables d'O2.

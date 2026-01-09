@@ -1,4 +1,4 @@
-NAME = ex01
+NAME = monoid
 
 SOURCES = monoid.ml main.ml
 

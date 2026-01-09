@@ -7,7 +7,7 @@ let () =
   print_endline "";
   
   (* Test 1: Create specific alkanes *)
-  print_endline "--- Test 1: Creating specific alkanes ---";
+  print_endline "Test 1: Creating specific alkanes";
   let methane = new Alkane.methane in
   let ethane = new Alkane.ethane in
   let octane = new Alkane.octane in
@@ -16,7 +16,7 @@ let () =
   print_endline "";
   
   (* Test 2: to_string *)
-  print_endline "--- Test 2: Alkane descriptions ---";
+  print_endline "Test 2: Alkane descriptions";
   print_endline methane#to_string;
   print_endline ethane#to_string;
   print_endline octane#to_string;
@@ -24,7 +24,7 @@ let () =
   print_endline "";
   
   (* Test 3: Verify formulas *)
-  print_endline "--- Test 3: Formula verification (CnH2n+2) ---";
+  print_endline "Test 3: Formula verification (CnH2n+2)";
   print_endline ("Methane (C1H4): " ^ methane#formula);
   print_endline ("Ethane (C2H6): " ^ ethane#formula);
   print_endline ("Octane (C8H18): " ^ octane#formula);
@@ -32,7 +32,7 @@ let () =
   print_endline "";
   
   (* Test 4: Create all alkanes from n=1 to n=12 *)
-  print_endline "--- Test 4: All alkanes (n=1 to 12) ---";
+  print_endline "Test 4: All alkanes (n=1 to 12)";
   for i = 1 to 12 do
     let alk = new Alkane.alkane i in
     Printf.printf "n=%2d: %s\n" i alk#to_string
@@ -40,7 +40,7 @@ let () =
   print_endline "";
   
   (* Test 5: Test bounds *)
-  print_endline "--- Test 5: Testing bounds ---";
+  print_endline "Test 5: Testing bounds";
   (try
     let _ = new Alkane.alkane 0 in
     print_endline "ERROR: n=0 should fail"
@@ -55,7 +55,7 @@ let () =
   print_endline "";
   
   (* Test 6: Polymorphism with molecules *)
-  print_endline "--- Test 6: Alkanes as molecules ---";
+  print_endline "Test 6: Alkanes as molecules";
   let propane = new Alkane.propane in
   let butane = new Alkane.butane in
   let molecules : Molecule.molecule list = [
@@ -67,7 +67,7 @@ let () =
   print_endline "";
   
   (* Test 7: Equals *)
-  print_endline "--- Test 7: Testing equals ---";
+  print_endline "Test 7: Testing equals";
   let methane2 = new Alkane.methane in
   print_endline ("methane equals methane2: " ^ 
     string_of_bool (methane#equals (methane2 :> Molecule.molecule)));

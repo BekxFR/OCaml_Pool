@@ -12,7 +12,7 @@ $(NAME):
 	$(OCAMLOPT) -c $(SRCS)
 	$(OCAMLOPT) -o $(NAME) param.cmx $(MAIN)
 
-test: $(NAME)
+test: all
 	./$(NAME)
 
 clean:
