@@ -35,13 +35,19 @@ let () =
   print_newline ();
 
   (* Test 1: return (singleton) *)
-  print_endline "Test 1: return";
+  print_endline "Test 1: return and union";
   let s1 = Set.return 42 in
   print_string "Set.return 42 = ";
   print_int_set s1;
   print_newline ();
   test_case "return creates singleton" (s1 = [42]);
-  print_newline ();
+  let s11 = Set.return 24 in
+  print_string "Set.return 24 = ";
+  print_int_set s11;
+  let s12 = Set.union s1 s11 in
+  print_string "\nSet.union of two singletons = ";
+  print_int_set s12;
+  print_string "\n\n";
 
   (* Test 2: union *)
   print_endline "Test 2: union";
@@ -102,7 +108,8 @@ let () =
 
   (* Test 6: bind *)
   print_endline "Test 6: bind";
-  let s6 = Set.bind [1; 2; 3] (fun x -> [x; x * 10]) in
+  let multi = ( * ) 10 in
+  let s6 = Set.bind [1; 2; 3] (fun x -> [x; multi x]) in
   print_string "bind [1; 2; 3] (fun x -> [x; x * 10]) = ";
   print_int_set s6;
   print_newline ();

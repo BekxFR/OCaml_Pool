@@ -38,11 +38,14 @@ module Set = struct
     Executes the function provided as an argument on every element in the set. *)
   let foreach m f = List.iter f m
 
-  (* for_all: 'a Set.t -> ('a -> bool) -> bool
+  (* for_all: 'a Set.t -> ('a -> bool) -> bool : Quantificateur universel 
     Returns true if all the elements in the set satisfy the predicate given as an argument; false otherwise. *)
   let for_all m predicate = List.for_all predicate m
 
-  (* exists: 'a Set.t -> ('a -> bool) -> bool
+  (* exists: 'a Set.t -> ('a -> bool) -> bool : Quantificateur existentiel
     Returns true if at least one element in the set satisfies the predicate given as an argument; false otherwise. *)
   let exists m predicate = List.exists predicate m
+
+  (* not (for_all s p) = exists s (fun x -> not (p x)) : loi de De Morgan appliquée aux quantificateurs.
+   * Elle garantit la cohérence logique entre for_all et exists. *)
 end
