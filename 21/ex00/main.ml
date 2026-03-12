@@ -13,8 +13,8 @@ let () =
   let n = new Atom.nitrogen in
   let s = new Atom.sulfur in
   let cl = new Atom.chlorine in
-  print_endline "";
   
+  (* Test 1: to_string method *)
   print_endline "Test 1: Atom descriptions";
   print_endline h#to_string;
   print_endline c#to_string;
@@ -40,7 +40,8 @@ let () =
   print_endline ("c equals o: " ^ string_of_bool (c#equals o));
   print_endline "";
   
-  (* Test 4: Polymorphism - list of atoms *)
+  (* Test 4: Polymorphism - list of atoms 
+     :> is used to upcast to the Atom.atom type *)
   print_endline "Test 4: List of different atoms";
   let atoms : Atom.atom list = [
     (h :> Atom.atom);

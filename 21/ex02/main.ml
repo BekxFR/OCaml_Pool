@@ -33,10 +33,10 @@ let () =
   
   (* Test 4: Create all alkanes from n=1 to n=12 *)
   print_endline "Test 4: All alkanes (n=1 to 12)";
-  for i = 1 to 12 do
+  List.iter (fun i ->
     let alk = new Alkane.alkane i in
     Printf.printf "n=%2d: %s\n" i alk#to_string
-  done;
+  ) (List.init 12 (fun i -> i + 1));
   print_endline "";
   
   (* Test 5: Test bounds *)

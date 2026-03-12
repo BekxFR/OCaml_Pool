@@ -3,24 +3,24 @@
  * where 1 <= n <= 12
  *)
 
-(* Classe alkane héritant de molecule *)
+(* Alkane class inheriting from molecule *)
 class alkane (n : int) =
-  (* Vérification que n est dans [1, 12] *)
+  (* Check that n is in [1, 12] *)
   let () = 
     if n < 1 || n > 12 then
       failwith "Alkane: n must be between 1 and 12"
   in
-  (* Génération de la liste d'atomes selon CnH(2n+2) *)
+  (* Generate atom list following CnH(2n+2) *)
   let atoms_list =
     let carbons = List.init n (fun _ -> (new Atom.carbon :> Atom.atom)) in
     let hydrogens = List.init (2 * n + 2) (fun _ -> (new Atom.hydrogen :> Atom.atom)) in
     carbons @ hydrogens
   in
 object (self)
-  (* Héritage de molecule *)
+  (* Inherit from molecule *)
   inherit Molecule.molecule atoms_list as super
   
-  (* Noms des alcanes selon n *)
+  (* Alkane names by n *)
   method name =
     match n with
     | 1 -> "Methane"
@@ -37,11 +37,11 @@ object (self)
     | 12 -> "Dodecane"
     | _ -> failwith "Invalid alkane number"
   
-  (* Méthode pour obtenir la valeur de n *)
+  (* Method to get the value of n *)
   method carbon_count = n
 end
 
-(* Fonctions de commodité pour créer des alcanes spécifiques - factory methods *)
+(* Convenience functions to create specific alkanes - factory methods *)
 (* let methane () = new alkane 1
 let ethane () = new alkane 2
 let propane () = new alkane 3

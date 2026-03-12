@@ -3,20 +3,19 @@
  * Uses Hill notation for chemical formulas
  *)
 
-(* Classe virtuelle molecule *)
 class virtual molecule (atom_list : Atom.atom list) =
 object (self)
-  (* Liste privée des atomes *)
+  (* Private atoms list *)
   val atoms = atom_list
   
-  (* Méthode virtuelle pour le nom *)
+  (* Virtual method for the name *)
   method virtual name : string
   
-  (* Méthode pour obtenir la formule en notation de Hill
-   * Format: C d'abord, puis H, puis les autres par ordre alphabétique
+  (* Method to get the formula in Hill notation
+   * Format: C first, then H, then the others in alphabetical order
    *)
   method formula : string =
-    (* Fonction auxiliaire pour compter les occurrences de chaque symbole *)
+    (* Auxiliary function to count the occurrences of each symbol *)
     let count_atoms atoms =
       let rec count acc = function
         | [] -> acc
@@ -33,10 +32,10 @@ object (self)
       count [] atoms
     in
     
-    (* Fonction de tri selon les règles de Hill:
-     * 1. C en premier
-     * 2. H en second
-     * 3. Les autres par ordre alphabétique
+    (* Function to sort according to Hill notation rules:
+     * 1. C first
+     * 2. H second
+     * 3. Others in alphabetical order
      *)
     let hill_sort counts =
       let c_count = try [("C", List.assoc "C" counts)] with Not_found -> [] in
@@ -46,7 +45,7 @@ object (self)
       c_count @ h_count @ sorted_others
     in
     
-    (* Fonction pour formater l'affichage d'un élément *)
+    (* Function to format the display of an element *)
     let format_element (symbol, count) =
       if count = 1 then symbol
       else symbol ^ string_of_int count
@@ -56,38 +55,38 @@ object (self)
     let sorted_counts = hill_sort counts in
     String.concat "" (List.map format_element sorted_counts)
   
-  (* Méthode to_string *)
+  (* Method to_string *)
   method to_string : string =
     self#name ^ " (" ^ self#formula ^ ")"
   
-  (* Méthode equals *)
+  (* Method equals *)
   method equals (other : molecule) : bool =
     self#formula = other#formula
 end
 
-(* Molécule concrète: Water (H2O) *)
+(* Concrete molecule: Water (H2O) *)
 class water =
 object
   inherit molecule [
+    new Atom.oxygen;
     new Atom.hydrogen;
     new Atom.hydrogen;
-    new Atom.oxygen
   ]
   method name = "Water"
 end
 
-(* Molécule concrète: Carbon dioxide (CO2) *)
+(* Concrete molecule: Carbon dioxide (CO2) *)
 class carbon_dioxide =
 object
   inherit molecule [
+    new Atom.oxygen;
     new Atom.carbon;
     new Atom.oxygen;
-    new Atom.oxygen
   ]
   method name = "Carbon dioxide"
 end
 
-(* Molécule concrète: Methane (CH4) *)
+(* Concrete molecule: Methane (CH4) *)
 class methane =
 object
   inherit molecule [
@@ -100,7 +99,7 @@ object
   method name = "Methane"
 end
 
-(* Molécule concrète: Sulfuric acid (H2SO4) *)
+(* Concrete molecule: Sulfuric acid (H2SO4) *)
 class sulfuric_acid =
 object
   inherit molecule [
@@ -115,7 +114,7 @@ object
   method name = "Sulfuric acid"
 end
 
-(* Molécule concrète: Ammonia (NH3) *)
+(* Concrete molecule: Ammonia (NH3) *)
 class ammonia =
 object
   inherit molecule [
@@ -127,7 +126,7 @@ object
   method name = "Ammonia"
 end
 
-(* Molécule concrète: Dioxygen (O2) *)
+(* Concrete molecule: Dioxygen (O2) *)
 class dioxygen =
 object
   inherit molecule [
@@ -137,7 +136,7 @@ object
   method name = "Dioxygen"
 end
 
-(* Molécule concrète: Dihydrogen (H2) *)
+(* Concrete molecule : Dihydrogen (H2) *)
 class dihydrogen =
 object
   inherit molecule [
