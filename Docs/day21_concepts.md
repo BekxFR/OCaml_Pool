@@ -259,3 +259,57 @@ reaction (virtual)
   |-- alkane_combustion (param: alkane list)
         |-- incomplete_combustion (ajoute get_incomplete_results)
 ```
+
+---
+
+## Elements et molecules utilises dans les exercices
+
+### Atomes (ex00)
+
+| Symbole | Nom (EN) | Nom (FR) | Numero atomique (Z) |
+|---------|----------|----------|---------------------|
+| H | Hydrogen | Hydrogene | 1 |
+| C | Carbon | Carbone | 6 |
+| N | Nitrogen | Azote | 7 |
+| O | Oxygen | Oxygene | 8 |
+| S | Sulfur | Soufre | 16 |
+| Cl | Chlorine | Chlore | 17 |
+
+### Molecules (ex01)
+
+| Formule | Nom (EN) | Nom (FR) |
+|---------|----------|----------|
+| H2 | Dihydrogen | Dihydrogene |
+| O2 | Dioxygen | Dioxygene |
+| H2O | Water | Eau |
+| CO2 | Carbon Dioxide | Dioxyde de carbone |
+| CH4 | Methane | Methane |
+| NH3 | Ammonia | Ammoniac |
+| H2SO4 | Sulfuric Acid | Acide sulfurique |
+
+### Alcanes (ex02) - CnH(2n+2)
+
+| Formule | Nom (EN) | Nom (FR) | n |
+|---------|----------|----------|---|
+| CH4 | Methane | Methane | 1 |
+| C2H6 | Ethane | Ethane | 2 |
+| C3H8 | Propane | Propane | 3 |
+| C4H10 | Butane | Butane | 4 |
+| C5H12 | Pentane | Pentane | 5 |
+| C6H14 | Hexane | Hexane | 6 |
+| C7H16 | Heptane | Heptane | 7 |
+| C8H18 | Octane | Octane | 8 |
+| C9H20 | Nonane | Nonane | 9 |
+| C10H22 | Decane | Decane | 10 |
+| C11H24 | Undecane | Undecane | 11 |
+| C12H26 | Dodecane | Dodecane | 12 |
+
+### Molecules additionnelles (ex04-ex05)
+
+| Formule | Nom (EN) | Nom (FR) | Contexte |
+|---------|----------|----------|----------|
+| O2 | Dioxygen | Dioxygene | Reactif de combustion (ex04) |
+| CO2 | Carbon Dioxide | Dioxyde de carbone | Produit de combustion complete (ex04) |
+| H2O | Water | Eau | Produit de combustion complete (ex04) |
+| CO | Carbon Monoxide | Monoxyde de carbone | Produit de combustion incomplete (ex05) |
+| C | Carbon (Soot) | Carbone (Suie) | Produit de combustion incomplete (ex05) |

@@ -40,7 +40,7 @@ let () =
   Printf.printf "Found %d incomplete combustion scenarios\n" (List.length propane_results);
   print_endline "";
   
-  print_endline "Sample outcomes (first 8):";
+  print_endline "Sample outcomes (first 13):";
   let sample_count = min 13 (List.length propane_results) in
   List.iter (fun (o2, products) ->
     Printf.printf "With %d O2: " o2;
@@ -96,18 +96,18 @@ let () =
   ) sorted_groups;
   print_endline "";
 
-  (* Test 6: Methane andPropane incomplete combustion *)
-  print_endline "Test 6: Propane incomplete combustion";
+  (* Test 6: Methane and Propane incomplete combustion *)
+  print_endline "Test 6: Methane and Propane incomplete combustion";
   let incomplete_propane2 = new Incomplete_combustion.incomplete_combustion [propane; methane] in
   
-  print_endline "Generating incomplete combustion outcomes for Propane...";
+  print_endline "Generating incomplete combustion outcomes for Methane and Propane...";
   let propane_results2 = incomplete_propane2#get_incomplete_results in
   
   Printf.printf "Found %d incomplete combustion scenarios\n" (List.length propane_results2);
   print_endline "";
   
-  print_endline "Sample outcomes (first 8):";
-  let sample_count = min 8 (List.length propane_results2) in
+  print_endline "Sample outcomes (first 12):";
+  let sample_count = min 12 (List.length propane_results2) in
   List.iter (fun (o2, products) ->
     Printf.printf "With %d O2: " o2;
     let product_strs = List.map (fun (mol, coeff) ->
@@ -118,6 +118,27 @@ let () =
   ) (List.filteri (fun i _ -> i < sample_count) propane_results2);
   print_endline "";
 
+  (* Test 7: Ethane and Propane incomplete combustion *)
+  print_endline "Test 7: Ethane and Propane incomplete combustion";
+  let incomplete_propane2 = new Incomplete_combustion.incomplete_combustion [propane; ethane] in
   
+  print_endline "Generating incomplete combustion outcomes for Ethane and Propane...";
+  let propane_results2 = incomplete_propane2#get_incomplete_results in
+  
+  Printf.printf "Found %d incomplete combustion scenarios\n" (List.length propane_results2);
+  print_endline "";
+  
+  print_endline "Sample outcomes (first 12):";
+  let sample_count = min 12 (List.length propane_results2) in
+  List.iter (fun (o2, products) ->
+    Printf.printf "With %d O2: " o2;
+    let product_strs = List.map (fun (mol, coeff) ->
+      if coeff = 1 then mol#to_string
+      else string_of_int coeff ^ " " ^ mol#to_string
+    ) products in
+    print_endline (String.concat " + " product_strs)
+  ) (List.filteri (fun i _ -> i < sample_count) propane_results2);
+  print_endline "";
+
   print_endline "=== All tests completed ===";
   print_endline ""

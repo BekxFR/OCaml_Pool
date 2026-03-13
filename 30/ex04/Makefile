@@ -1,4 +1,4 @@
-NAME = try_monad
+NAME = set_monad
 
 SRCS = param.ml
 MAIN = main.ml

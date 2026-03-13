@@ -1,6 +1,6 @@
-NAME = parson
+NAME = app
 
-SOURCES = parson.ml main.ml
+SOURCES = app.ml main.ml
 
 CMX = $(SOURCES:.ml=.cmx)
 

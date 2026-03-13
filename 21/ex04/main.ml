@@ -136,20 +136,20 @@ let () =
 
 
   (* Test de duplication d'alcanes *)
-  print_endline "Test: Multiple same alkanes";
+  print_endline "\nTest: Multiple same alkanes";
   let double_dodecane = new Alkane_combustion.alkane_combustion 
     [new Alkane.dodecane; new Alkane.dodecane] in
-  print_endline ("Double dodecane: " ^ double_dodecane#to_string);
+  print_endline ("Double dodecane: " ^ double_dodecane#to_string ^ " is balanced: " ^ string_of_bool double_dodecane#is_balanced);
 
   (* Test avec liste longue *)
-  print_endline "Test: Many different alkanes";
+  print_endline "\nTest: Many different alkanes";
   let many = new Alkane_combustion.alkane_combustion [
     new Alkane.methane;
     new Alkane.ethane;
     new Alkane.propane;
     new Alkane.butane
   ] in
-  print_endline ("Complex: " ^ many#to_string);
+  print_endline ("Complex: " ^ many#to_string ^ " is balanced: " ^ string_of_bool many#is_balanced);
 
   
   print_endline "=== All tests completed ===";

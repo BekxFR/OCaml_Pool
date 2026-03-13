@@ -32,11 +32,6 @@ object (self)
       count [] atoms
     in
     
-    (* Function to sort according to Hill notation rules:
-     * 1. C first
-     * 2. H second
-     * 3. Others in alphabetical order
-     *)
     let hill_sort counts =
       let c_count = try [("C", List.assoc "C" counts)] with Not_found -> [] in
       let h_count = try [("H", List.assoc "H" counts)] with Not_found -> [] in

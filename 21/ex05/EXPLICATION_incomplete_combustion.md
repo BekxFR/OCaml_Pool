@@ -133,14 +133,23 @@ Pour chaque quantité d'O₂ (de 1 à max_o2-1) :
    generate_combos total_carbons remaining_oxygen []
    ```
 
-#### Étape 3 : Algorithme Récursif
+#### Étape 3 : Algorithme Récursif (`generate_combos`)
+
+La fonction `generate_combos` explore **toutes les façons** de placer chaque atome de carbone dans CO₂, CO ou C, en respectant le budget d'oxygène restant.
 
 ```ocaml
 let rec generate_combos c_remaining o_remaining acc =
   if c_remaining = 0 && o_remaining = 0 then
-    [acc]  (* Solution trouvée *)
+    [acc]  (* Solution trouvée : tous les C sont placés et tout l'O est utilisé *)
+  else if c_remaining = 0 then
+    []     (* Plus de C à placer mais il reste de l'O inutilisé → invalide *)
+  else if o_remaining < 0 then
+    []     (* On a consommé trop d'O → invalide *)
   else
-    (* Essayer d'ajouter CO₂, CO ou C *)
+    (* Pour chaque atome de C, essayer 3 possibilités : *)
+    let with_co2 = ... generate_combos (c-1) (o-2) (("CO2",1)::acc) ...
+    let with_co  = ... generate_combos (c-1) (o-1) (("CO",1)::acc) ...
+    let with_c   = ... generate_combos (c-1) (o)   (("C",1)::acc) ...
     with_co2 @ with_co @ with_c
 ```
 
@@ -150,6 +159,128 @@ let rec generate_combos c_remaining o_remaining acc =
         /       |        \
     CO₂(-2O)  CO(-1O)   C(-0O)
 ```
+
+L'accumulateur `acc` contient la liste des choix faits pour chaque carbone, sous forme de paires `("CO2", 1)`, `("CO", 1)` ou `("C", 1)`. Chaque entrée représente **un** atome de carbone placé. La fonction retourne une **liste de listes** : chaque sous-liste est une combinaison valide.
+
+**Exemple : 3 C, 2 O restants → arbre d'exploration :**
+```
+generate_combos 3 2 []
+├── CO₂ → generate_combos 2 0 [("CO2",1)]
+│   ├── CO₂ → generate_combos 1 -2 [...] → [] (o < 0)
+│   ├── CO  → generate_combos 1 -1 [...] → [] (o < 0)
+│   └── C   → generate_combos 1 0 [("C",1);("CO2",1)]
+│       ├── CO₂ → generate_combos 0 -2 [...] → [] (o < 0)
+│       ├── CO  → generate_combos 0 -1 [...] → [] (o < 0)
+│       └── C   → generate_combos 0 0 [("C",1);("C",1);("CO2",1)] → VALIDE
+├── CO  → generate_combos 2 1 [("CO",1)]
+│   ├── CO₂ → generate_combos 1 -1 [...] → [] (o < 0)
+│   ├── CO  → generate_combos 1 0 [("CO",1);("CO",1)]
+│   │   ├── CO₂ → [] (o < 0)
+│   │   ├── CO  → [] (o < 0)
+│   │   └── C   → generate_combos 0 0 [("C",1);("CO",1);("CO",1)] → VALIDE
+│   └── C   → generate_combos 1 1 [("C",1);("CO",1)]
+│       ├── CO₂ → [] (o < 0)
+│       ├── CO  → generate_combos 0 0 [("CO",1);("C",1);("CO",1)] → VALIDE (doublon)
+│       └── C   → generate_combos 0 1 [...] → [] (reste 1 O)
+└── C   → generate_combos 2 2 [("C",1)]
+    ├── CO₂ → generate_combos 1 0 [("CO2",1);("C",1)]
+    │   └── C → generate_combos 0 0 [...] → VALIDE (doublon de la 1ère)
+    ├── CO  → generate_combos 1 1 [("CO",1);("C",1)]
+    │   ├── CO  → generate_combos 0 0 [...] → VALIDE (doublon)
+    │   └── C   → generate_combos 0 1 [...] → [] (reste 1 O)
+    └── C   → generate_combos 1 2 [("C",1);("C",1)]
+        ├── CO₂ → generate_combos 0 0 [...] → VALIDE (doublon)
+        └── ...
+```
+
+> **Note sur les doublons :** Chaque atome de C est traité individuellement, donc
+> `[CO₂, C, C]` et `[C, CO₂, C]` sont deux combinaisons distinctes pour `generate_combos`.
+> L'étape d'agrégation les transforme toutes les deux en `[("CO2",1); ("C",2)]`.
+> Pour éliminer ces doublons, on applique une **normalisation** après agrégation :
+> chaque combo est triée (`List.sort compare`) pour que l'ordre des entrées soit
+> déterministe, puis `List.sort_uniq compare` élimine les combos identiques.
+> Le résultat final est donc **sans doublons**, conformément au sujet.
+
+#### Étape 4 : Agrégation avec `aggregate`
+
+`generate_combos` produit des listes comme `[("CO2",1); ("C",1); ("C",1); ("CO2",1)]` où chaque entrée correspond à **un seul** atome de carbone. Il faut regrouper les entrées identiques et additionner leurs compteurs.
+
+```ocaml
+let rec aggregate acc = function
+  | [] -> acc
+  | (mol_type, count) :: rest ->
+      let current = try List.assoc mol_type acc with Not_found -> 0 in
+      aggregate ((mol_type, current + count) :: (List.remove_assoc mol_type acc)) rest
+```
+
+La fonction parcourt la liste et maintient un accumulateur `acc` de type `(string * int) list` :
+- Pour chaque `(mol_type, count)`, elle cherche si `mol_type` existe déjà dans `acc`
+- Si oui : additionne le compteur (`current + count`) et remplace l'ancienne entrée
+- Si non : ajoute une nouvelle entrée avec `count`
+
+**Exemple :**
+```
+Entrée:  [("CO2",1); ("C",1); ("C",1)]
+  → ("CO2",1) : acc = [("CO2",1)]
+  → ("C",1)   : acc = [("C",1); ("CO2",1)]
+  → ("C",1)   : current=1, acc = [("C",2); ("CO2",1)]
+Sortie:  [("C",2); ("CO2",1)]
+```
+
+#### Étape 5 : Normalisation et dédoublonnage
+
+Après agrégation, les doublons issus de `generate_combos` (comme `[CO₂,C,C]` et `[C,CO₂,C]`) donnent le **même résultat agrégé** `[("CO2",1); ("C",2)]`. Cependant, l'ordre des entrées peut varier. Pour pouvoir les comparer et dédupliquer :
+
+1. **Tri de chaque combo** (`List.sort compare`) : normalise l'ordre des entrées
+2. **Déduplication** (`List.sort_uniq compare`) : élimine les combos identiques
+
+```ocaml
+let normalized = List.map (List.sort compare) aggregated_combos in
+let unique_combos = List.sort_uniq compare normalized
+```
+
+#### Étape 6 : Filtrage avec `is_incomplete`
+
+On ne veut que les combustions **incomplètes** (pas tout en CO₂).
+
+```ocaml
+let is_incomplete combo =
+  List.exists (fun (mol, _) -> mol = "CO" || mol = "C") combo
+```
+
+Le filtre est simple : une combustion est incomplète si **au moins un** carbone finit en CO ou en C (suie), au lieu d'être entièrement en CO₂.
+
+```ocaml
+let incomplete_combos = List.filter is_incomplete unique_combos
+```
+
+#### Étape 7 : Conversion en objets (`combo_to_molecules`)
+
+Les combinaisons sont déjà agrégées et dédupliquées. Cette étape les convertit en vrais objets `molecule` et ajoute l'eau :
+
+```ocaml
+let combo_to_molecules combo =
+  let molecules = List.map (fun (mol_type, coeff) ->
+    let mol = match mol_type with
+      | "CO2" -> new Molecule.carbon_dioxide
+      | "CO"  -> new carbon_monoxide
+      | "C"   -> new carbon
+    in (mol, coeff)
+  ) combo in
+  (* Ajouter l'eau en dernier *)
+  molecules @ [((new Molecule.water), total_hydrogens / 2)]
+```
+
+#### Étape 8 : Aplatissement (`flat_results`)
+
+`generate_all_outcomes` produit une liste de `(o2_amount, outcomes_list)` où chaque `outcomes_list` contient **plusieurs** scénarios pour un même nombre d'O₂. `flat_results` transforme cela en une liste plate :
+
+```
+Avant : [(3, [scenario_A; scenario_B]); (4, [scenario_C])]
+Après : [(3, scenario_A); (3, scenario_B); (4, scenario_C)]
+```
+
+Chaque entrée du résultat final est un tuple `(int * (molecule * int) list)` : la quantité d'O₂ et la liste des produits avec leurs coefficients.
 
 ### Exemple Concret : Propane avec 3 O₂
 

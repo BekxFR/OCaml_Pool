@@ -3,7 +3,7 @@
  * Generates all possible combinations of CO2, CO, C and H2O
  *)
 
-(* Class for pure carbon (soot) *)
+(* Class for pure carbon (soot/suie) *)
 class carbon =
 object
   inherit Molecule.molecule [new Atom.carbon]
@@ -54,7 +54,6 @@ object (self)
      * for a given number of available oxygen atoms
      *)
     let generate_outcomes o2_amount =
-      (* Compute available oxygen *)
       let available_oxygen = 2 * o2_amount in
 
       (* Water always consumes total_hydrogens/2 oxygens *)
@@ -74,10 +73,8 @@ object (self)
             (* Valid solution found *)
             [acc]
           else if c_remaining = 0 then
-            (* No more carbon but still oxygen left - no solution *)
             []
           else if o_remaining < 0 then
-            (* Not enough oxygen *)
             []
           else
             (* Try adding CO2, CO, or C *)
@@ -104,25 +101,27 @@ object (self)
 
         let raw_combos = generate_combos total_carbons remaining_oxygen [] in
 
+        (* Aggregate each combo: [("CO2",1);("C",1);("C",1)] -> [("CO2",1);("C",2)] *)
+        let rec aggregate acc = function
+          | [] -> acc
+          | (mol_type, count) :: rest ->
+              let current = try List.assoc mol_type acc with Not_found -> 0 in
+              aggregate ((mol_type, current + count) :: (List.remove_assoc mol_type acc)) rest
+        in
+        let aggregated_combos = List.map (aggregate []) raw_combos in
+
+        (* Sort each combo to normalize order, then deduplicate *)
+        let normalized = List.map (List.sort compare) aggregated_combos in
+        let unique_combos = List.sort_uniq compare normalized in
+
         (* Filter out complete combustions (no CO or C) *)
         let is_incomplete combo =
           List.exists (fun (mol, _) -> mol = "CO" || mol = "C") combo
         in
-
-        let incomplete_combos = List.filter is_incomplete raw_combos in
+        let incomplete_combos = List.filter is_incomplete unique_combos in
 
         (* Convert combos to molecule lists with coefficients *)
         let combo_to_molecules combo =
-          (* Aggregate coefficients *)
-          let rec aggregate acc = function
-            | [] -> acc
-            | (mol_type, count) :: rest ->
-                let current = try List.assoc mol_type acc with Not_found -> 0 in
-                aggregate ((mol_type, current + count) :: (List.remove_assoc mol_type acc)) rest
-          in
-          let aggregated = aggregate [] combo in
-
-          (* Convert to molecule objects *)
           let molecules = List.map (fun (mol_type, coeff) ->
             let mol = match mol_type with
               | "CO2" -> (new Molecule.carbon_dioxide :> Molecule.molecule)
@@ -131,7 +130,7 @@ object (self)
               | _ -> failwith "Unknown molecule type"
             in
             (mol, coeff)
-          ) aggregated in
+          ) combo in
 
           (* Add water *)
           let h2o_coeff = total_hydrogens / 2 in

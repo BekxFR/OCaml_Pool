@@ -15,7 +15,6 @@ end
 
 (* Alkane_combustion class inheriting from reaction *)
 class alkane_combustion (alkanes : Alkane.alkane list) =
-  (* Check that the list is not empty *)
   let () =
     if alkanes = [] then
       failwith "alkane_combustion: empty alkane list"
@@ -43,16 +42,12 @@ class alkane_combustion (alkanes : Alkane.alkane list) =
       let rec gcd a b = if b = 0 then a else gcd b (a mod b) in
       let g = gcd (gcd (gcd coeff_alk coeff_o2) coeff_co2) coeff_h2o in
 
-      (* Divide by GCD *)
       (coeff_alk / g, coeff_o2 / g, coeff_co2 / g, coeff_h2o / g)
     in
-
 
     (* Compute for each alkane and aggregate *)
     let coeffs_list = List.map compute_one_alkane alkane_list in
 
-    (* For simplicity, just take each alkane individually *)
-    (* A full version would need to find the LCM *)
     coeffs_list
   in
 
@@ -60,7 +55,7 @@ class alkane_combustion (alkanes : Alkane.alkane list) =
 
   (* Build reactant and product lists *)
   let build_start_list alkanes coeffs =
-    let alkane_entries = List.map2 (fun alk (coeff_alk, coeff_o2, _, _) ->
+    let alkane_entries = List.map2 (fun alk (coeff_alk, _, _, _) ->
       ((alk :> Molecule.molecule), coeff_alk)
     ) alkanes coeffs in
 
