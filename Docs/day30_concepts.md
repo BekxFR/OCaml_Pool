@@ -83,28 +83,27 @@ Concrete examples:
 A **module type** (signature) defines an interface — the types and values a module must expose:
 
 ```ocaml
-module type Watchtower =
+module type MONOID =
   sig
-    type hour = int
-    val zero : hour
-    val add : hour -> hour -> hour
-    val sub : hour -> hour -> hour
+    type element
+    val zero1 : element
+    val zero2 : element
+    val add : element -> element -> element
+    ...
   end
 ```
 
-A **module** implements a signature:
+A **module** implements a signature. When the implementation is at the file's top level, the filename becomes the module name:
 
 ```ocaml
-module Watchtower : Watchtower =
-  struct
-    type hour = int
-    let zero = 12
-    let add h1 h2 = ...
-    let sub h1 h2 = ...
-  end
+(* watchtower.ml — the file itself is module Watchtower *)
+type hour = int
+let zero = 12
+let add h1 h2 = ...
+let sub h1 h2 = ...
 ```
 
-> When a `.ml` file defines a module `M`, it is accessed from other files as `Filename.M` (e.g., `Watchtower.Watchtower`, `Param.Try`).
+> Accessed from other files as `Watchtower.zero`, `Watchtower.add`, etc.
 
 ### Functor
 
@@ -161,15 +160,15 @@ This is the core mechanism that makes `Try` a monad for exception handling: inst
 ## Module hierarchy summary
 
 ```
-ex00/watchtower.ml
-  module type Watchtower (signature)
-  module Watchtower : Watchtower (implementation)
+ex00/watchtower.ml -> module Watchtower
+  type hour = int
+  zero, add, sub
 
-ex01/app.ml
-  module type App (signature)
-  module App : App (implementation)
+ex01/app.ml -> module App
+  type project = string * string * int
+  zero, combine, fail, success
 
-ex02/monoid.ml
+ex02/monoid.ml -> module Monoid
   module type MONOID (signature for arithmetic monoids)
   module INT : MONOID (int implementation)
   module FLOAT : MONOID (float implementation)
@@ -178,14 +177,12 @@ ex02/monoid.ml
   module Calc_int = Calc(INT)
   module Calc_float = Calc(FLOAT)
 
-ex03/param.ml
+ex03/try_monad.ml -> module Try_monad
   exception Filter_failed
-  module Try (exception monad)
-    type 'a t = Success of 'a | Failure of exn
-    return, bind, recover, filter, flatten
+  type 'a t = Success of 'a | Failure of exn
+  return, bind, recover, filter, flatten
 
-ex04/param.ml
-  module Set (set monad)
-    type 'a t = 'a list
-    return, bind, union, inter, diff, filter, foreach, for_all, exists
+ex04/set_monad.ml -> module Set_monad
+  type 'a t = 'a list
+  return, bind, union, inter, diff, filter, foreach, for_all, exists
 ```

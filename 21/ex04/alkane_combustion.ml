@@ -3,16 +3,6 @@
  * Implements automatic stoichiometric balancing
  *)
 
-(* Molecules for combustion - Dioxygen O2 *)
-class dioxygen =
-object
-  inherit Molecule.molecule [
-    new Atom.oxygen;
-    new Atom.oxygen
-  ]
-  method name = "Dioxygen"
-end
-
 (* Alkane_combustion class inheriting from reaction *)
 class alkane_combustion (alkanes : Alkane.alkane list) =
   let () =
@@ -64,7 +54,7 @@ class alkane_combustion (alkanes : Alkane.alkane list) =
       acc + coeff_o2
     ) 0 coeffs in
 
-    alkane_entries @ [((new dioxygen :> Molecule.molecule), total_o2)]
+    alkane_entries @ [((new Molecule.dioxygen :> Molecule.molecule), total_o2)]
   in
 
   let build_result_list alkanes coeffs =

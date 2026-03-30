@@ -1,6 +1,6 @@
 NAME = set_monad
 
-SRCS = param.ml
+SRCS = set_monad.ml
 MAIN = main.ml
 
 OCAMLC = ocamlc
@@ -10,7 +10,7 @@ all: $(NAME)
 
 $(NAME):
 	$(OCAMLOPT) -c $(SRCS)
-	$(OCAMLOPT) -o $(NAME) param.cmx $(MAIN)
+	$(OCAMLOPT) -o $(NAME) set_monad.cmx $(MAIN)
 
 test: all
 	./$(NAME)

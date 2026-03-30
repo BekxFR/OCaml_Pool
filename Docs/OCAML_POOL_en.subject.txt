@@ -1,0 +1,66 @@
+Piscines Ocaml: Quick presentation
+
+Summary:
+Version: 1.00
+
+Contents
+I
+
+Piscine
+
+2
+
+II
+
+Instructions
+
+3
+
+1
+
+Chapter I
+Piscine
+What is a piscine?
+Much like the selection piscine, this project is split into many small projects (modules),
+with each day introducing a new concept in the language, paradigm, or technology you
+have chosen to work on. Validating a piscine requires more than just a day or two of
+commitment. To ensure that this piscine is completed correctly, it is recommended that
+you take note of everything listed below:
+• You can’t validate the piscine if you work on only one or two projects.
+• Try to submit your work every day: even if something isn’t finished, it’s better to
+submit what you have.
+• At least two weeks of work: beginning the piscine shouldn’t be taken lightly.
+• Each initialized repository will be automatically closed after one day.
+• You have two days to complete the required peer evaluations for each module.
+• It is possible to retry modules without waiting.
+
+It is important not to work on these modules alone. For this reason,
+it is highly recommended to approach these piscines with several
+other students.
+
+2
+
+Chapter II
+Instructions
+To validate this piscine, you must complete the following projects:
+• OCAML - Basic syntax and semantics - 0
+• OCAML - Recursion and higher-order functions - 0
+• OCAML - Pattern Matching and Data Types - 0
+• OCAML - OCaml’s modules language - 1
+• OCAML - Imperative features - 1
+• OCAML - Functor - 1
+• OCAML - Object oriented programming - 1
+• OCAML - Object oriented programming - 2
+• OCAML - Monoids and Monads - 3
+You must validate each project in the specified order. Indeed, it will not be possible
+to register for a project if the previous project has not been validated.
+
+You must be registered for this project.
+
+It is important to refer to this document to access your projects.
+You can click on each module on this page to access it or use the
+list of projects available in your intra.
+
+3
+
+
