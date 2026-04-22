@@ -6,18 +6,16 @@
 (* Class for pure carbon (soot/suie) *)
 class carbon =
 object
-  inherit Molecule.molecule [new Atom.carbon]
-  method name = "Carbon"
+  inherit Molecule.molecule "Carbon" [new Atom.carbon]
 end
 
 (* Class for carbon monoxide CO *)
 class carbon_monoxide =
 object
-  inherit Molecule.molecule [
+  inherit Molecule.molecule "Carbon monoxide" [
     new Atom.carbon;
     new Atom.oxygen
   ]
-  method name = "Carbon monoxide"
 end
 
 (* Extended alkane_combustion class with incomplete combustion *)

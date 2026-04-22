@@ -1,95 +1,73 @@
 (* Alkane_combustion - Exercise 04
  * Complete combustion of alkanes: CnH(2n+2) + O2 -> CO2 + H2O
- * Implements automatic stoichiometric balancing
+ * Implements automatic stoichiometric balancing with the smallest
+ * possible coefficients and duplicate removal.
  *)
 
-(* Alkane_combustion class inheriting from reaction *)
+(* Deduplicate alkanes by their carbon count (same n = same alkane). *)
+let dedup_alkanes (alkanes : Alkane.alkane list) : Alkane.alkane list =
+  let rec aux seen acc = function
+    | [] -> List.rev acc
+    | a :: rest ->
+        let n = a#carbon_count in
+        if List.mem n seen then aux seen acc rest
+        else aux (n :: seen) (a :: acc) rest
+  in
+  aux [] [] alkanes
+
+(* Integer GCD *)
+let rec gcd a b = if b = 0 then abs a else gcd b (a mod b)
+
+(* GCD of a list of positive integers *)
+let list_gcd = function
+  | [] -> 1
+  | x :: xs -> List.fold_left gcd x xs
+
+(* Compute balanced reactants and products from a list of distinct alkanes,
+ * reduced to the smallest possible stoichiometric coefficients.
+ *
+ * For each alkane CnH(2n+2):
+ *     2 CnH(2n+2) + (3n+1) O2 -> 2n CO2 + (2n+2) H2O
+ * Totals across alkanes are summed, then divided by their global GCD. *)
+let compute_balanced (alkanes : Alkane.alkane list) =
+  let per_alkane =
+    List.map (fun alk ->
+      let n = alk#carbon_count in
+      (alk, 2, 3 * n + 1, 2 * n, 2 * (n + 1))
+    ) alkanes
+  in
+  let total_o2 = List.fold_left (fun acc (_, _, o2, _, _) -> acc + o2) 0 per_alkane in
+  let total_co2 = List.fold_left (fun acc (_, _, _, co2, _) -> acc + co2) 0 per_alkane in
+  let total_h2o = List.fold_left (fun acc (_, _, _, _, h2o) -> acc + h2o) 0 per_alkane in
+  let alk_coeffs = List.map (fun (_, c, _, _, _) -> c) per_alkane in
+  let g = list_gcd (alk_coeffs @ [total_o2; total_co2; total_h2o]) in
+  let g = if g = 0 then 1 else g in
+  let start_list =
+    List.map (fun (alk, c, _, _, _) ->
+      ((alk :> Molecule.molecule), c / g)
+    ) per_alkane
+    @ [((new Molecule.dioxygen :> Molecule.molecule), total_o2 / g)]
+  in
+  let result_list =
+    [
+      ((new Molecule.carbon_dioxide :> Molecule.molecule), total_co2 / g);
+      ((new Molecule.water :> Molecule.molecule), total_h2o / g)
+    ]
+  in
+  (start_list, result_list)
+
 class alkane_combustion (alkanes : Alkane.alkane list) =
   let () =
     if alkanes = [] then
       failwith "alkane_combustion: empty alkane list"
   in
+  let unique_alkanes = dedup_alkanes alkanes in
+  let (start_list, result_list) = compute_balanced unique_alkanes in
+object
+  inherit Reaction.reaction start_list result_list
 
-  (* Compute coefficients to balance the reaction
-   * For CnH(2n+2) + O2 -> CO2 + H2O
-   * Balance: CnH(2n+2) + (3n+1)/2 O2 -> n CO2 + (n+1) H2O
-   *
-   * Multiply by 2 to avoid fractions:
-   * 2 CnH(2n+2) + (3n+1) O2 -> 2n CO2 + 2(n+1) H2O
-   *)
-  let compute_coefficients alkane_list =
-    (* Compute coefficients for one alkane *)
-    let compute_one_alkane alk =
-      let n = alk#carbon_count in
-      (* Coefficients multiplied by 2 to avoid fractions *)
-      (* Formula: 2 CnH(2n+2) + (3n+1) O2 -> 2n CO2 + 2(n+1) H2O *)
-      let coeff_alk = 2 in
-      let coeff_o2 = 3 * n + 1 in
-      let coeff_co2 = 2 * n in
-      let coeff_h2o = 2 * (n + 1) in
-
-      (* Compute GCD to simplify *)
-      let rec gcd a b = if b = 0 then a else gcd b (a mod b) in
-      let g = gcd (gcd (gcd coeff_alk coeff_o2) coeff_co2) coeff_h2o in
-
-      (coeff_alk / g, coeff_o2 / g, coeff_co2 / g, coeff_h2o / g)
-    in
-
-    (* Compute for each alkane and aggregate *)
-    let coeffs_list = List.map compute_one_alkane alkane_list in
-
-    coeffs_list
-  in
-
-  let coefficients = compute_coefficients alkanes in
-
-  (* Build reactant and product lists *)
-  let build_start_list alkanes coeffs =
-    let alkane_entries = List.map2 (fun alk (coeff_alk, _, _, _) ->
-      ((alk :> Molecule.molecule), coeff_alk)
-    ) alkanes coeffs in
-
-    (* Sum all O2 coefficients *)
-    let total_o2 = List.fold_left (fun acc (_, coeff_o2, _, _) ->
-      acc + coeff_o2
-    ) 0 coeffs in
-
-    alkane_entries @ [((new Molecule.dioxygen :> Molecule.molecule), total_o2)]
-  in
-
-  let build_result_list alkanes coeffs =
-    (* Sum all CO2 and H2O coefficients *)
-    let total_co2 = List.fold_left (fun acc (_, _, coeff_co2, _) ->
-      acc + coeff_co2
-    ) 0 coeffs in
-
-    let total_h2o = List.fold_left (fun acc (_, _, _, coeff_h2o) ->
-      acc + coeff_h2o
-    ) 0 coeffs in
-
-    [
-      ((new Molecule.carbon_dioxide :> Molecule.molecule), total_co2);
-      ((new Molecule.water :> Molecule.molecule), total_h2o)
-    ]
-  in
-
-  let start_list = build_start_list alkanes coefficients in
-  let result_list = build_result_list alkanes coefficients in
-
-object (self)
-  inherit Reaction.reaction
-
-  val start = start_list
-  val result = result_list
-
-  (* get_start and get_result: no exception since already balanced *)
-  method get_start = start
-
-  method get_result = result
-
-  (* balance: returns self since coefficients are already correctly computed *)
+  (* balance: returns a NEW alkane_combustion built from deduplicated
+   * alkanes, producing the smallest possible stoichiometric coefficients. *)
   method balance : Reaction.reaction =
-    (self :> Reaction.reaction)
-
-  (* is_balanced: uses inherited method from reaction to verify *)
+    (new alkane_combustion unique_alkanes :> Reaction.reaction)
 end

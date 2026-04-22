@@ -1,23 +1,13 @@
 (* Helper function to print a set of integers *)
 let print_int_set set =
   print_string "[";
-  let first = ref true in
-  Set_monad.foreach set (fun x ->
-    if not !first then print_string "; ";
-    first := false;
-    print_int x
-  );
+  print_string (String.concat "; " (List.map string_of_int set));
   print_string "]"
 
 (* Helper function to print a set of strings *)
 let print_string_set set =
   print_string "[";
-  let first = ref true in
-  Set_monad.foreach set (fun x ->
-    if not !first then print_string "; ";
-    first := false;
-    print_string ("\"" ^ x ^ "\"")
-  );
+  print_string (String.concat "; " (List.map (fun s -> "\"" ^ s ^ "\"") set));
   print_string "]"
 
 (* Helper function to check a test *)
@@ -125,15 +115,12 @@ let () =
 
   (* Test 7: foreach *)
   print_endline "Test 7: foreach";
+  let foreach_set = [1; 2; 3] in
   print_string "foreach [1; 2; 3] with print: ";
-  let count = ref 0 in
-  Set_monad.foreach [1; 2; 3] (fun x ->
-    if !count > 0 then print_string ", ";
-    print_int x;
-    count := !count + 1
-  );
+  Set_monad.foreach foreach_set print_int;
   print_newline ();
-  test_case "foreach executes on all elements" (!count = 3);
+  test_case "foreach iterates all elements"
+    (List.length foreach_set = 3);
   print_newline ();
 
   (* Test 8: for_all *)

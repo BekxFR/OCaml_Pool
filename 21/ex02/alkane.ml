@@ -6,7 +6,7 @@
 (* Alkane class inheriting from molecule *)
 class alkane (n : int) =
   (* Check that n is in [1, 12] *)
-  let () = 
+  let () =
     if n < 1 || n > 12 then
       failwith "Alkane: n must be between 1 and 12"
   in
@@ -16,12 +16,8 @@ class alkane (n : int) =
     let hydrogens = List.init (2 * n + 2) (fun _ -> (new Atom.hydrogen :> Atom.atom)) in
     carbons @ hydrogens
   in
-object (self)
-  (* Inherit from molecule *)
-  inherit Molecule.molecule atoms_list as super
-  
-  (* Alkane names by n *)
-  method name =
+  (* Alkane name derived from n *)
+  let alkane_name =
     match n with
     | 1 -> "Methane"
     | 2 -> "Ethane"
@@ -36,7 +32,11 @@ object (self)
     | 11 -> "Undecane"
     | 12 -> "Dodecane"
     | _ -> failwith "Invalid alkane number"
-  
+  in
+object
+  (* Inherit from molecule with name and atoms *)
+  inherit Molecule.molecule alkane_name atoms_list
+
   (* Method to get the value of n *)
   method carbon_count = n
 end

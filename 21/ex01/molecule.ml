@@ -3,13 +3,13 @@
  * Uses Hill notation for chemical formulas
  *)
 
-class virtual molecule (atom_list : Atom.atom list) =
+class virtual molecule (mol_name : string) (atom_list : Atom.atom list) =
 object (self)
   (* Private atoms list *)
   val atoms = atom_list
-  
-  (* Virtual method for the name *)
-  method virtual name : string
+
+  (* Name provided by constructor *)
+  method name : string = mol_name
   
   (* Method to get the formula in Hill notation
    * Format: C first, then H, then the others in alphabetical order
@@ -62,42 +62,39 @@ end
 (* Concrete molecule: Water (H2O) *)
 class water =
 object
-  inherit molecule [
+  inherit molecule "Water" [
     new Atom.oxygen;
     new Atom.hydrogen;
     new Atom.hydrogen;
   ]
-  method name = "Water"
 end
 
 (* Concrete molecule: Carbon dioxide (CO2) *)
 class carbon_dioxide =
 object
-  inherit molecule [
+  inherit molecule "Carbon dioxide" [
     new Atom.oxygen;
     new Atom.carbon;
     new Atom.oxygen;
   ]
-  method name = "Carbon dioxide"
 end
 
 (* Concrete molecule: Methane (CH4) *)
 class methane =
 object
-  inherit molecule [
+  inherit molecule "Methane" [
     new Atom.carbon;
     new Atom.hydrogen;
     new Atom.hydrogen;
     new Atom.hydrogen;
     new Atom.hydrogen
   ]
-  method name = "Methane"
 end
 
 (* Concrete molecule: Sulfuric acid (H2SO4) *)
 class sulfuric_acid =
 object
-  inherit molecule [
+  inherit molecule "Sulfuric acid" [
     new Atom.hydrogen;
     new Atom.hydrogen;
     new Atom.sulfur;
@@ -106,37 +103,33 @@ object
     new Atom.oxygen;
     new Atom.oxygen
   ]
-  method name = "Sulfuric acid"
 end
 
 (* Concrete molecule: Ammonia (NH3) *)
 class ammonia =
 object
-  inherit molecule [
+  inherit molecule "Ammonia" [
     new Atom.nitrogen;
     new Atom.hydrogen;
     new Atom.hydrogen;
     new Atom.hydrogen
   ]
-  method name = "Ammonia"
 end
 
 (* Concrete molecule: Dioxygen (O2) *)
 class dioxygen =
 object
-  inherit molecule [
+  inherit molecule "Dioxygen" [
     new Atom.oxygen;
     new Atom.oxygen
   ]
-  method name = "Dioxygen"
 end
 
 (* Concrete molecule : Dihydrogen (H2) *)
 class dihydrogen =
 object
-  inherit molecule [
+  inherit molecule "Dihydrogen" [
     new Atom.hydrogen;
     new Atom.hydrogen
   ]
-  method name = "Dihydrogen"
 end

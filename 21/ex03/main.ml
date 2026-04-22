@@ -57,17 +57,9 @@ let () =
   let unbalanced_reaction =
     object (self)
       inherit Reaction.reaction
-      
-      val start = [
-        ((new Alkane.methane :> Molecule.molecule), 1)
-      ]
-      
-      val result = [
-        ((new Molecule.water :> Molecule.molecule), 1)
-      ]
-      
-      method get_start = start
-      method get_result = result
+        [((new Alkane.methane :> Molecule.molecule), 1)]
+        [((new Molecule.water :> Molecule.molecule), 1)]
+
       method balance : Reaction.reaction = (self :> Reaction.reaction)
     end
   in

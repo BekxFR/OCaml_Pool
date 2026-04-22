@@ -6,12 +6,16 @@
 (* Exception for unbalanced reactions *)
 exception UnbalancedReaction
 
-(* Virtual class reaction *)
-class virtual reaction =
+(* Virtual class reaction - instantiated with two collections of molecules *)
+class virtual reaction
+    (start_molecules : (Molecule.molecule * int) list)
+    (result_molecules : (Molecule.molecule * int) list) =
 object (self)
-  (* Virtual lists of reactants and products *)
-  method virtual get_start : (Molecule.molecule * int) list
-  method virtual get_result : (Molecule.molecule * int) list
+  val start_list = start_molecules
+  val result_list = result_molecules
+
+  method get_start : (Molecule.molecule * int) list = start_list
+  method get_result : (Molecule.molecule * int) list = result_list
 
   (* Count atoms in a list of molecules with coefficients *)
   method private count_atoms (molecules : (Molecule.molecule * int) list) : (string * int) list =
@@ -101,19 +105,14 @@ end
 class methane_combustion =
 object (self)
   inherit reaction
-
-  val start_molecules = [
-    ((new Alkane.methane :> Molecule.molecule), 1);
-    ((new Molecule.dioxygen :> Molecule.molecule), 2)
-  ]
-
-  val result_molecules = [
-    ((new Molecule.carbon_dioxide :> Molecule.molecule), 1);
-    ((new Molecule.water :> Molecule.molecule), 2)
-  ]
-
-  method get_start = start_molecules
-  method get_result = result_molecules
+    [
+      ((new Alkane.methane :> Molecule.molecule), 1);
+      ((new Molecule.dioxygen :> Molecule.molecule), 2)
+    ]
+    [
+      ((new Molecule.carbon_dioxide :> Molecule.molecule), 1);
+      ((new Molecule.water :> Molecule.molecule), 2)
+    ]
 
   method balance : reaction =
     (self :> reaction)
@@ -124,18 +123,13 @@ end
 class water_synthesis =
 object (self)
   inherit reaction
-
-  val start_list = [
-    ((new Molecule.dihydrogen :> Molecule.molecule), 2);
-    ((new Molecule.dioxygen :> Molecule.molecule), 1)
-  ]
-
-  val result_list = [
-    ((new Molecule.water :> Molecule.molecule), 2)
-  ]
-
-  method get_start = start_list
-  method get_result = result_list
+    [
+      ((new Molecule.dihydrogen :> Molecule.molecule), 2);
+      ((new Molecule.dioxygen :> Molecule.molecule), 1)
+    ]
+    [
+      ((new Molecule.water :> Molecule.molecule), 2)
+    ]
 
   method balance : reaction =
     (self :> reaction)
